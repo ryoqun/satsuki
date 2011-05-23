@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- filename: satsuki.xml -->
+<component>
+	<name>org.freedesktop.IBus.satsuki</name>
+	<description>StATefUl KIboard</description>
+	<exec>/usr/local/bin/ibus-engine-satsuki --ibus</exec>
+	<version>0.0.1</version>
+	<author>Ryo Onodera &lt;ryoqun@gmail.com&gt;</author>
+	<license>GPL</license>
+	<homepage>http://github.com/ryoqun/satsuki</homepage>
+	<textdomain>satsuki</textdomain>
+
+	<engines>
+		<engine>
+			<name>satsuki</name>
+			<language>ja</language>
+			<license>GPL</license>
+			<author>Ryo Onodera &lt;ryoqun@gmail.com&gt;</author>
+			<!-- <icon>/usr/local/share/ibus-satsuki/icons/ibus-satsuki.png</icon> still no icon ;) -->
+			<layout>us</layout>
+			<longname>satsuki</longname>
+			<description>StATefUl Kiboard</description>
+			<rank>0</rank>
+		</engine>
+	</engines>
+
+</component>
