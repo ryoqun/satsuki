@@ -1,0 +1,58 @@
+name:
+  satsuki - StATefUl Kiboard
+
+version:
+  0.0.1
+
+description:
+  satsuki extends the traditional keyboard state model, which only recognizes
+  a few key combinations (i.e. Ctrl+<key>, Alt+<key>).
+
+  By extended keyboard state, you can type hard-to-type letters (punctuations,
+  numbers, uppercase letters, etc) with more ease (YMMV).
+
+  This works as an ibus IME engine. As such, when enabled, satsuki intercepts
+  all input key events. Then, according to its mode changed by certain key
+  events, it sends translated key events to ibus-supported applications.
+
+  Space+j => "{"
+  Space+k => "}"
+  ...
+
+  Henkan+<lowercase letter key> => <UPPERCASE LETTER>
+
+  Henken+q => "1"
+  Henken+w => "2"
+  ...
+
+  Muhenkan+j => down arrow key equivalent
+  Muhenkan+k => up arrow key equivalent
+
+  z+<any key> or /+<any key> => Ctrl+<any key> equivalent
+
+  That's all, you can live only with home position and neighboring keys for the
+  rest of your life.
+
+working platform(s):
+  Ubuntu with python-ibus package installed and with the above patch applied
+
+required patch:
+  https://github.com/ryoqun/ibus/commit/d059132885d3c90647f0
+
+prepare to use:
+  1. apply above patch
+  2. restart ibus-daemon
+
+try:
+  $ make test
+
+install:
+  $ sudo make install
+
+bugs:
+  - no attractive icon
+  - not written in Ruby
+  - no test
+  - can't work with Qt based applications (ibus bug?)
+  - no documentation
+  - can't chain with other ibus engines (ibus limitation)
