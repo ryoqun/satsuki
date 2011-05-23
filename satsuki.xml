@@ -19,7 +19,7 @@
 			<!-- <icon>/usr/local/share/ibus-satsuki/icons/ibus-satsuki.png</icon> still no icon ;) -->
 			<layout>us</layout>
 			<longname>satsuki</longname>
-			<description>StATefUl Kiboard</description>
+			<description>StATefUl KIboard</description>
 			<rank>0</rank>
 		</engine>
 	</engines>
