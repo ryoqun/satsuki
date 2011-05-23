@@ -56,3 +56,6 @@ bugs:
   - can't work with Qt based applications (ibus bug?)
   - no documentation
   - can't chain with other ibus engines (ibus limitation)
+
+not bugs:
+  - its name (including its case usage and origin of the second 's')
