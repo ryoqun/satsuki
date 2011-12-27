@@ -50,7 +50,6 @@ install:
   $ sudo make install
 
 bugs:
-  - no attractive icon
   - not written in Ruby
   - no test
   - can't work with Qt based applications (ibus bug?)
