@@ -34,7 +34,7 @@ description:
   rest of your life.
 
 working platform(s):
-  Ubuntu with python-ibus package installed and with the above patch applied
+  Ubuntu with python-ibus package installed and with the following patch applied
 
 required patch:
   https://github.com/ryoqun/ibus/commit/d059132885d3c90647f0
