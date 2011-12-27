@@ -36,7 +36,8 @@ description:
 working platform(s):
   Ubuntu with python-ibus package installed and with the following patch applied
 
-required patch:
+patch for python-ibus:
+  fixes a bug which causes satsuki not to work
   https://github.com/ryoqun/ibus/commit/d059132885d3c90647f0
 
 prepare to use:
