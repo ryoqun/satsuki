@@ -39,6 +39,8 @@ install:
 	install -c -m 644 satsuki.xml "/usr/share/ibus/component"
 	mkdir -p "/usr/local/share/satsuki"
 	install -c -m 644 engine.py factory.py main.py "/usr/local/share/satsuki"
+	mkdir -p "/usr/local/share/satsuki/icons"
+	install -c -m 644 satsuki.svg anthy.svg "/usr/local/share/satsuki/icons"
 
 test:
 	env \
