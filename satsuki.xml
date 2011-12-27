@@ -16,7 +16,7 @@
 			<language>ja</language>
 			<license>GPL</license>
 			<author>Ryo Onodera &lt;ryoqun@gmail.com&gt;</author>
-			<!-- <icon>/usr/local/share/ibus-satsuki/icons/ibus-satsuki.png</icon> still no icon ;) -->
+			<icon>/usr/local/share/satsuki/icons/satsuki.svg</icon>
 			<layout>us</layout>
 			<longname>satsuki</longname>
 			<description>StATefUl KIboard</description>
