@@ -94,8 +94,6 @@ class Engine(ibus.EngineBase):
       self.__shift_mode = False
 
   def process_key_event(self, keyval, keycode, state):
-      print keyval, keycode, state
-
       try:
         processed = self.__update_space_mode(keyval, keycode, state)
         if processed:
@@ -241,5 +239,4 @@ class Engine(ibus.EngineBase):
     self.__forward_key_event(keyval, keycode, state)
 
   def __forward_key_event(self, keyval, keycode, state):
-    print ["foward:", keyval, keycode, state]
     self.forward_key_event(keyval, keycode, state)
