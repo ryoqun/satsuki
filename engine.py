@@ -133,7 +133,7 @@ class Engine(ibus.EngineBase):
       return False
 
   def __update_tenkey_mode(self, keyval, keycode, state):
-    if keyval == 65314:
+    if keyval == 65314 or keyval == 65332:
       if self.__is_pressed(state):
         self.__tenkey_mode = True
       else:
@@ -142,7 +142,7 @@ class Engine(ibus.EngineBase):
       return True
 
   def __update_shift_mode(self, keyval, keycode, state):
-    if keyval == 65315:
+    if keyval == 65315 or keyval == 65329:
       if self.__is_pressed(state):
         self.__shift_mode = True
       else:
