@@ -7,13 +7,13 @@
 %%
 Normal
 {
-  keydown(event) [ event.name == :space ]
+  keydown(event) [ event.name == "space" ]
     push(SpaceMap::PreSpace)
     {}
-  keydown(event) [ event.name == :slash ]
+  keydown(event) [ event.name == "slash" ]
     push(ControlMap::PreSlashControl)
     {}
-  keydown(event) [ event.name == :z ]
+  keydown(event) [ event.name == "z" ]
     push(ControlMap::PreZKeyControl)
     {}
   keydown(event)
@@ -25,15 +25,15 @@ Normal
 %map SpaceMap
 %%
 PreSpace {
-  keyup(event) [ event.name == :space ]
+  keyup(event) [ event.name == "space" ]
     pop
     { emit_space_key_event(); }
 
-  keydown(event) [ event.name == :slash ]
+  keydown(event) [ event.name == "slash" ]
     Space/push(ControlMap::PreSlashControl)
     {}
 
-  keydown(event) [ event.name == :z ]
+  keydown(event) [ event.name == "z" ]
     Space/push(ControlMap::PreZKeyControl)
     {}
 
@@ -46,11 +46,11 @@ Space
   Entry { space_mode(true); }
   Exit { space_mode(false); }
 {
-  keydown(event) [ event.name == :slash ]
+  keydown(event) [ event.name == "slash" ]
     push(ControlMap::PreSlashControl)
     {}
 
-  keydown(event) [ event.name == :z ]
+  keydown(event) [ event.name == "z" ]
     push(ControlMap::PreZKeyControl)
     {}
 
@@ -58,7 +58,7 @@ Space
     nil
     { convert_and_emit(event); }
 
-  keyup(event) [ event.name == :space ]
+  keyup(event) [ event.name == "space" ]
     pop
     {}
 
@@ -79,7 +79,7 @@ Space
 %map ControlMap
 %%
 PreSlashControl {
-  keyup(event) [ event.name == :slash ]
+  keyup(event) [ event.name == "slash" ]
     pop
     { convert_and_emit(event); }
 
@@ -89,7 +89,7 @@ PreSlashControl {
 }
 
 PreZKeyControl {
-  keyup(event) [ event.name == :z ]
+  keyup(event) [ event.name == "z" ]
     pop
     { convert_and_emit(event); }
 
@@ -99,13 +99,13 @@ PreZKeyControl {
 }
 
 ZKeyControl {
-  keyup(event) [ event.name == :z ]
+  keyup(event) [ event.name == "z" ]
     pop
     {}
 }
 
 SlashControl {
-  keyup(event) [ event.name == :slash ]
+  keyup(event) [ event.name == "slash" ]
     pop
     {}
 }

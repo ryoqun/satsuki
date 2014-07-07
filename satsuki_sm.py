@@ -32,17 +32,17 @@ class MainMap_Normal(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :space  :
+        if  event.name == "space"  :
             # No actions.
             pass
             fsm.pushState(SpaceMap.PreSpace)
             fsm.getState().Entry(fsm)
-        elif  event.name == :slash  :
+        elif  event.name == "slash"  :
             # No actions.
             pass
             fsm.pushState(ControlMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == :z  :
+        elif  event.name == "z"  :
             # No actions.
             pass
             fsm.pushState(ControlMap.PreZKeyControl)
@@ -68,7 +68,7 @@ class SpaceMap_PreSpace(SpaceMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :slash  :
+        if  event.name == "slash"  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -76,7 +76,7 @@ class SpaceMap_PreSpace(SpaceMap_Default):
             fsm.getState().Entry(fsm)
             fsm.pushState(ControlMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == :z  :
+        elif  event.name == "z"  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -96,7 +96,7 @@ class SpaceMap_PreSpace(SpaceMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :space  :
+        if  event.name == "space"  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -118,12 +118,12 @@ class SpaceMap_Space(SpaceMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :slash  :
+        if  event.name == "slash"  :
             # No actions.
             pass
             fsm.pushState(ControlMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == :z  :
+        elif  event.name == "z"  :
             # No actions.
             pass
             fsm.pushState(ControlMap.PreZKeyControl)
@@ -138,7 +138,7 @@ class SpaceMap_Space(SpaceMap_Default):
 
 
     def keyup(self, fsm, event):
-        if  event.name == :space  :
+        if  event.name == "space"  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -185,7 +185,7 @@ class ControlMap_PreSlashControl(ControlMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :slash  :
+        if  event.name == "slash"  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -209,7 +209,7 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == :z  :
+        if  event.name == "z"  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -222,7 +222,7 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
 class ControlMap_ZKeyControl(ControlMap_Default):
 
     def keyup(self, fsm, event):
-        if  event.name == :z  :
+        if  event.name == "z"  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -233,7 +233,7 @@ class ControlMap_ZKeyControl(ControlMap_Default):
 class ControlMap_SlashControl(ControlMap_Default):
 
     def keyup(self, fsm, event):
-        if  event.name == :slash  :
+        if  event.name == "slash"  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass

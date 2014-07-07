@@ -24,6 +24,8 @@ import pango
 import ibus
 from ibus import keysyms
 from ibus import modifier
+import statemap
+import satsuki_sm
 
 class Engine(ibus.EngineBase):
   __tenkey_mode_map = {
@@ -92,6 +94,8 @@ class Engine(ibus.EngineBase):
       self.__control_mode_used = False
       self.__tenkey_mode = False
       self.__shift_mode = False
+      self.__state = satsuki_sm.Turnstile_sm(self)
+      print "aaaaa"
 
   def process_key_event(self, keyval, keycode, state):
       try:
