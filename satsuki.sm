@@ -1,0 +1,112 @@
+%class Turnstile
+%package Turnstile
+
+%start MainMap::Normal
+
+%map MainMap
+%%
+Normal
+{
+  keydown(event) [ event.name == :space ]
+    push(SpaceMap::PreSpace)
+    {}
+  keydown(event) [ event.name == :slash ]
+    push(ControlMap::PreSlashControl)
+    {}
+  keydown(event) [ event.name == :z ]
+    push(ControlMap::PreZKeyControl)
+    {}
+  keydown(event)
+    nil
+    { convert_and_emit(event); }
+}
+%%
+
+%map SpaceMap
+%%
+PreSpace {
+  keyup(event) [ event.name == :space ]
+    pop
+    { emit_space_key_event(); }
+
+  keydown(event) [ event.name == :slash ]
+    Space/push(ControlMap::PreSlashControl)
+    {}
+
+  keydown(event) [ event.name == :z ]
+    Space/push(ControlMap::PreZKeyControl)
+    {}
+
+  keydown(event)
+    Space
+    { convert_and_emit(event); }
+}
+
+Space
+  Entry { space_mode(true); }
+  Exit { space_mode(false); }
+{
+  keydown(event) [ event.name == :slash ]
+    push(ControlMap::PreSlashControl)
+    {}
+
+  keydown(event) [ event.name == :z ]
+    push(ControlMap::PreZKeyControl)
+    {}
+
+  keydown(event) 
+    nil
+    { convert_and_emit(event); }
+
+  keyup(event) [ event.name == :space ]
+    pop
+    {}
+
+  keyup(event)
+    nil
+    {}
+}
+%%
+
+%map ShiftMap
+%%
+%%
+
+%map NumMap
+%%
+%%
+
+%map ControlMap
+%%
+PreSlashControl {
+  keyup(event) [ event.name == :slash ]
+    pop
+    { convert_and_emit(event); }
+
+  keydown(event)
+    SlashControl
+    { emit_control(event); }
+}
+
+PreZKeyControl {
+  keyup(event) [ event.name == :z ]
+    pop
+    { convert_and_emit(event); }
+
+  keydown(event)
+    ZKeyControl
+    { emit_control(event); }
+}
+
+ZKeyControl {
+  keyup(event) [ event.name == :z ]
+    pop
+    {}
+}
+
+SlashControl {
+  keyup(event) [ event.name == :slash ]
+    pop
+    {}
+}
+%%
