@@ -129,6 +129,7 @@ class Engine(ibus.EngineBase):
     print event
     if self.__space_mode:
       result = self.__space_mode_map[chr(event.keyval)]
+      state = 0
       if self.__is_pressed(state):
         state = result[2]
       else:
