@@ -126,10 +126,15 @@ class Engine(ibus.EngineBase):
     if self.__space_mode:
       self.__forward_space_mode_key_event(event.keyval, event.keycode, event.state)
     else:
-      self.__forward_key_event(event.keyval, event.keycode, event.state)
+      self.emit(event)
 
-  def emit(self,event):
+  def emit_space(self):
+    self.emit(KeyDown(keysyms.space, 57, 0))
+    self.emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
+
+  def emit(self, event):
     print "emit"
+    self.__forward_key_event(event.keyval, event.keycode, event.state)
 
   def space_mode(self, flag):
     self.__space_mode = flag

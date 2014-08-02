@@ -27,7 +27,7 @@ Normal
 PreSpace {
   keyup(event) [ event.name == "space" ]
     pop
-    { emit_space_key_event(); }
+    { emit_space(); }
 
   keydown(event) [ event.name == "slash" ]
     Space/push(ControlMap::PreSlashControl)

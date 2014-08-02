@@ -107,7 +107,7 @@ class SpaceMap_PreSpace(SpaceMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.emit_space_key_event()
+                ctxt.emit_space()
             finally:
                 fsm.popState()
         else:
