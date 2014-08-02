@@ -123,6 +123,13 @@ class Engine(ibus.EngineBase):
     print event.keycode
     print event.state
     print event
+    if self.__space_mode:
+      self.__forward_space_mode_key_event(event.keyval, event.keycode, event.state)
+    else:
+      self.__forward_key_event(event.keyval, event.keycode, event.state)
+
+  def emit(self,event):
+    print "emit"
 
   def space_mode(self, flag):
     self.__space_mode = flag
@@ -134,9 +141,9 @@ class Engine(ibus.EngineBase):
         else:
           self.__state.keyup(KeyUp(keyval, keycode, state))
 
-        processed = self.__update_space_mode(keyval, keycode, state)
-        if processed:
-          return True
+        #processed = self.__update_space_mode(keyval, keycode, state)
+        #if processed:
+        #  return True
 
         processed = self.__update_control_mode(keyval, keycode, state)
         if processed:
@@ -150,9 +157,9 @@ class Engine(ibus.EngineBase):
         if processed:
           return True
 
-        if self.__space_mode:
-          self.__forward_space_mode_key_event(keyval, keycode, state)
-          return True
+        #if self.__space_mode:
+        #  self.__forward_space_mode_key_event(keyval, keycode, state)
+        #  return True
 
         if self.__control_mode:
           self.__forward_control_mode_key_event(keyval, keycode, state)
@@ -169,7 +176,7 @@ class Engine(ibus.EngineBase):
       except Exception as exception:
         print exception
 
-      return False
+      return True
 
   def __update_tenkey_mode(self, keyval, keycode, state):
     if keyval == 65314 or keyval == 65332:

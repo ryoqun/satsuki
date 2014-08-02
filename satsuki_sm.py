@@ -84,10 +84,17 @@ class SpaceMap_PreSpace(SpaceMap_Default):
             fsm.getState().Entry(fsm)
             fsm.pushState(ControlMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
+        elif  event.name == "space"  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(SpaceMap.Space)
+            fsm.getState().Entry(fsm)
         else:
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
+                ctxt.space_mode(True)
                 ctxt.convert_and_emit(event)
             finally:
                 fsm.setState(SpaceMap.Space)

@@ -37,9 +37,13 @@ PreSpace {
     Space/push(ControlMap::PreZKeyControl)
     {}
 
+  keydown(event) [ event.name == "space" ]
+    Space
+    {}
+
   keydown(event)
     Space
-    { convert_and_emit(event); }
+    { space_mode(True); convert_and_emit(event); }
 }
 
 Space
@@ -54,7 +58,7 @@ Space
     push(ControlMap::PreZKeyControl)
     {}
 
-  keydown(event) 
+  keydown(event)
     nil
     { convert_and_emit(event); }
 
