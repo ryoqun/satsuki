@@ -178,30 +178,6 @@ class NumMap(object):
 class ControlMap_Default(TurnstileState):
     pass
 
-class ControlMap_PreSlashControl(ControlMap_Default):
-
-    def keydown(self, fsm, event):
-        ctxt = fsm.getOwner()
-        fsm.getState().Exit(fsm)
-        fsm.clearState()
-        try:
-            ctxt.emit_control(event)
-        finally:
-            fsm.setState(ControlMap.SlashControl)
-            fsm.getState().Entry(fsm)
-
-    def keyup(self, fsm, event):
-        ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
-            fsm.getState().Exit(fsm)
-            fsm.clearState()
-            try:
-                ctxt.convert_and_emit(event)
-            finally:
-                fsm.popState()
-        else:
-            ControlMap_Default.keyup(self, fsm, event)
-        
 class ControlMap_PreZKeyControl(ControlMap_Default):
 
     def keydown(self, fsm, event):
@@ -209,7 +185,7 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
         fsm.getState().Exit(fsm)
         fsm.clearState()
         try:
-            ctxt.emit_control(event)
+            ctxt.emit_control_down()
         finally:
             fsm.setState(ControlMap.ZKeyControl)
             fsm.getState().Entry(fsm)
@@ -226,7 +202,39 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
         else:
             ControlMap_Default.keyup(self, fsm, event)
         
+class ControlMap_PreSlashControl(ControlMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        fsm.getState().Exit(fsm)
+        fsm.clearState()
+        try:
+            ctxt.emit_control_down()
+        finally:
+            fsm.setState(ControlMap.SlashControl)
+            fsm.getState().Entry(fsm)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.name == "slash"  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_slash()
+            finally:
+                fsm.popState()
+        else:
+            ControlMap_Default.keyup(self, fsm, event)
+        
 class ControlMap_ZKeyControl(ControlMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(False)
 
     def keyup(self, fsm, event):
         if  event.name == "z"  :
@@ -239,6 +247,14 @@ class ControlMap_ZKeyControl(ControlMap_Default):
         
 class ControlMap_SlashControl(ControlMap_Default):
 
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(False)
+
     def keyup(self, fsm, event):
         if  event.name == "slash"  :
             fsm.getState().Exit(fsm)
@@ -250,8 +266,8 @@ class ControlMap_SlashControl(ControlMap_Default):
         
 class ControlMap(object):
 
-    PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 3)
-    PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 4)
+    PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 3)
+    PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 4)
     ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 5)
     SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 6)
     Default = ControlMap_Default('ControlMap.Default', -1)

@@ -82,16 +82,6 @@ Space
 
 %map ControlMap
 %%
-PreSlashControl {
-  keyup(event) [ event.name == "slash" ]
-    pop
-    { convert_and_emit(event); }
-
-  keydown(event)
-    SlashControl
-    { emit_control(event); }
-}
-
 PreZKeyControl {
   keyup(event) [ event.name == "z" ]
     pop
@@ -99,16 +89,32 @@ PreZKeyControl {
 
   keydown(event)
     ZKeyControl
-    { emit_control(event); }
+    { emit_control_down(); }
 }
 
-ZKeyControl {
+PreSlashControl {
+  keyup(event) [ event.name == "slash" ]
+    pop
+    { emit_slash(); }
+
+  keydown(event)
+    SlashControl
+    { emit_control_down(); }
+}
+
+ZKeyControl
+  Entry { control_mode(True); }
+  Exit { control_mode(False); }
+{
   keyup(event) [ event.name == "z" ]
     pop
     {}
 }
 
-SlashControl {
+SlashControl
+  Entry { control_mode(True); }
+  Exit { control_mode(False); }
+{
   keyup(event) [ event.name == "slash" ]
     pop
     {}

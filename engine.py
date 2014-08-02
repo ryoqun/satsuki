@@ -140,12 +140,25 @@ class Engine(ibus.EngineBase):
     self.emit(KeyDown(keysyms.z, 44, 0))
     self.emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
 
+  def emit_slash(self):
+    self.emit(KeyDown(keysyms.slash, 53, 0))
+    self.emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
+
+  def emit_control_down(self):
+    pass
+
+  def emit_control_up(self):
+    pass
+
   def emit(self, event):
     print "emit"
     self.__forward_key_event(event.keyval, event.keycode, event.state)
 
   def space_mode(self, flag):
     self.__space_mode = flag
+
+  def control_mode(self, flag):
+    self.__control_mode = flag
 
   def process_key_event(self, keyval, keycode, state):
       try:
