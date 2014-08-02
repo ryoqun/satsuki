@@ -27,6 +27,27 @@ from ibus import modifier
 import statemap
 import satsuki_sm
 
+class KeyEvent:
+  def __init__(self, keyval, keycode, state):
+    self.keyval = keyval
+    self.keycode = keycode
+    self.state = state
+
+  def name(self):
+    if self.keyval == keysyms.space:
+      "space"
+    else:
+      ""
+    
+class KeyDown(KeyEvent):
+  pass
+
+class KeyUp(KeyEvent):
+  pass
+
+class StateMachine(satsuki_sm.Turnstile_sm):
+  pass
+
 class Engine(ibus.EngineBase):
   __tenkey_mode_map = {
     'q': [ord('1'),   2, 0],
@@ -94,11 +115,12 @@ class Engine(ibus.EngineBase):
       self.__control_mode_used = False
       self.__tenkey_mode = False
       self.__shift_mode = False
-      self.__state = satsuki_sm.Turnstile_sm(self)
+      self.__state = StateMachine(self)
       print "aaaaa"
 
   def process_key_event(self, keyval, keycode, state):
       try:
+        self.__state.keydown(KeyDown(keyval, keycode, state))
         processed = self.__update_space_mode(keyval, keycode, state)
         if processed:
           return True
