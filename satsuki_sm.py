@@ -110,11 +110,11 @@ class SpaceMap_Space(SpaceMap_Default):
 
     def Entry(self, fsm):
         ctxt = fsm.getOwner()
-        ctxt.space_mode(true)
+        ctxt.space_mode(True)
 
     def Exit(self, fsm):
         ctxt = fsm.getOwner()
-        ctxt.space_mode(false)
+        ctxt.space_mode(False)
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()

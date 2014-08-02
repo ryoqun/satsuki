@@ -43,8 +43,8 @@ PreSpace {
 }
 
 Space
-  Entry { space_mode(true); }
-  Exit { space_mode(false); }
+  Entry { space_mode(True); }
+  Exit { space_mode(False); }
 {
   keydown(event) [ event.name == "slash" ]
     push(ControlMap::PreSlashControl)

@@ -32,12 +32,10 @@ class KeyEvent:
     self.keyval = keyval
     self.keycode = keycode
     self.state = state
-
-  def name(self):
     if self.keyval == keysyms.space:
-      "space"
+      self.name = "space"
     else:
-      ""
+      self.name = "none"
     
 class KeyDown(KeyEvent):
   pass
@@ -118,9 +116,24 @@ class Engine(ibus.EngineBase):
       self.__state = StateMachine(self)
       print "aaaaa"
 
+  def convert_and_emit(self, event):
+    #print self.__state.getState()
+    print event.name
+    print event.keyval
+    print event.keycode
+    print event.state
+    print event
+
+  def space_mode(self, flag):
+    self.__space_mode = flag
+
   def process_key_event(self, keyval, keycode, state):
       try:
-        self.__state.keydown(KeyDown(keyval, keycode, state))
+        if self.__is_pressed(state):
+          self.__state.keydown(KeyDown(keyval, keycode, state))
+        else:
+          self.__state.keyup(KeyUp(keyval, keycode, state))
+
         processed = self.__update_space_mode(keyval, keycode, state)
         if processed:
           return True
@@ -184,11 +197,11 @@ class Engine(ibus.EngineBase):
         #else:
         #  self.__space_mode = True
         #  return True
-        self.__space_mode = True
+        #self.__space_mode = True
         return True
       else:
         space_mode_used = self.__space_mode_used
-        self.__space_mode = False
+        #self.__space_mode = False
         self.__space_mode_used = False
 
         if space_mode_used:
