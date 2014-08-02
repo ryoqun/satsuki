@@ -128,9 +128,19 @@ class Engine(ibus.EngineBase):
     print event.state
     print event
     if self.__space_mode:
-      self.__forward_space_mode_key_event(event.keyval, event.keycode, event.state)
-    else:
-      self.emit(event)
+      result = self.__space_mode_map[chr(event.keyval)]
+      if self.__is_pressed(state):
+        state = result[2]
+      else:
+        state = result[2] | 1073741824
+      event.keyval = result[0]
+      event.keycode = result[1]
+      event.state = state
+
+    if self.__control_mode:
+      state = state | modifier.CONTROL_MASK
+
+    self.emit(event)
 
   def emit_space(self):
     self.emit(KeyDown(keysyms.space, 57, 0))
