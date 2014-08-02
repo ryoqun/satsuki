@@ -220,7 +220,7 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.convert_and_emit(event)
+                ctxt.emit_z()
             finally:
                 fsm.popState()
         else:

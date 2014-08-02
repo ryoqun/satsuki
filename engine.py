@@ -34,6 +34,10 @@ class KeyEvent:
     self.state = state
     if self.keyval == keysyms.space:
       self.name = "space"
+    elif self.keyval == keysyms.slash:
+      self.name = "slash"
+    elif self.keyval == keysyms.z:
+      self.name = "z"
     else:
       self.name = "none"
     
@@ -132,6 +136,10 @@ class Engine(ibus.EngineBase):
     self.emit(KeyDown(keysyms.space, 57, 0))
     self.emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
 
+  def emit_z(self):
+    self.emit(KeyDown(keysyms.z, 44, 0))
+    self.emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
+
   def emit(self, event):
     print "emit"
     self.__forward_key_event(event.keyval, event.keycode, event.state)
@@ -141,6 +149,11 @@ class Engine(ibus.EngineBase):
 
   def process_key_event(self, keyval, keycode, state):
       try:
+        print "before"
+        print keyval
+        print keycode
+        print state
+        print "end"
         if self.__is_pressed(state):
           self.__state.keydown(KeyDown(keyval, keycode, state))
         else:
@@ -150,9 +163,9 @@ class Engine(ibus.EngineBase):
         #if processed:
         #  return True
 
-        processed = self.__update_control_mode(keyval, keycode, state)
-        if processed:
-          return True
+        #processed = self.__update_control_mode(keyval, keycode, state)
+        #if processed:
+        #  return True
 
         processed = self.__update_tenkey_mode(keyval, keycode, state)
         if processed:
