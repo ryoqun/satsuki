@@ -127,6 +127,10 @@ PreZKeyControl {
     ZKeyControl
     {}
 
+  keydown(event) [ event.name == "space" ]
+    ZKeyControl/push(SpaceMap::PreSpace)
+    {}
+
   keydown(event)
     ZKeyControl
     { control_mode(True); convert_and_emit(event);}
@@ -141,6 +145,10 @@ PreSlashControl {
     SlashControl
     {}
 
+  keydown(event) [ event.name == "space" ]
+    SlashControl/push(SpaceMap::PreSpace)
+    {}
+
   keydown(event)
     SlashControl
     { control_mode(True); convert_and_emit(event); }
@@ -148,6 +156,20 @@ PreSlashControl {
   keyup(event) [ event.name == "slash" ]
     pop
     { emit_slash(); }
+}
+
+SimiSlashControl {
+  keydown(event)
+    SlashControl
+    { control_mode(True); flush(); convert_and_emit(event); }
+
+  keyup(event) [ event.name == "slash" ]
+    pop
+    { emit_slash(); flush(); convert_and_emit(event); }
+
+  keyup(event)
+    SlashControl
+    { control_mode(True); flush(); convert_and_emit(event); }
 }
 
 ZKeyControl

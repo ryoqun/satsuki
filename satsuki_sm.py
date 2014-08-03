@@ -278,6 +278,14 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
             pass
             fsm.setState(ControlMap.ZKeyControl)
             fsm.getState().Entry(fsm)
+        elif  event.name == "space"  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(ControlMap.ZKeyControl)
+            fsm.getState().Entry(fsm)
+            fsm.pushState(SpaceMap.PreSpace)
+            fsm.getState().Entry(fsm)
         else:
             fsm.getState().Exit(fsm)
             fsm.clearState()
@@ -311,6 +319,14 @@ class ControlMap_PreSlashControl(ControlMap_Default):
             pass
             fsm.setState(ControlMap.SlashControl)
             fsm.getState().Entry(fsm)
+        elif  event.name == "space"  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(ControlMap.SlashControl)
+            fsm.getState().Entry(fsm)
+            fsm.pushState(SpaceMap.PreSpace)
+            fsm.getState().Entry(fsm)
         else:
             fsm.getState().Exit(fsm)
             fsm.clearState()
@@ -334,6 +350,43 @@ class ControlMap_PreSlashControl(ControlMap_Default):
         else:
             ControlMap_Default.keyup(self, fsm, event)
         
+class ControlMap_SimiSlashControl(ControlMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        fsm.getState().Exit(fsm)
+        fsm.clearState()
+        try:
+            ctxt.control_mode(True)
+            ctxt.flush()
+            ctxt.convert_and_emit(event)
+        finally:
+            fsm.setState(ControlMap.SlashControl)
+            fsm.getState().Entry(fsm)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.name == "slash"  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_slash()
+                ctxt.flush()
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.popState()
+        else:
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.control_mode(True)
+                ctxt.flush()
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.setState(ControlMap.SlashControl)
+                fsm.getState().Entry(fsm)
+
+
 class ControlMap_ZKeyControl(ControlMap_Default):
 
     def Entry(self, fsm):
@@ -418,8 +471,9 @@ class ControlMap(object):
 
     PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 5)
     PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 6)
-    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 7)
-    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 8)
+    SimiSlashControl = ControlMap_SimiSlashControl('ControlMap.SimiSlashControl', 7)
+    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 8)
+    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 9)
     Default = ControlMap_Default('ControlMap.Default', -1)
 
 class Turnstile_sm(statemap.FSMContext):

@@ -103,6 +103,7 @@ class Engine(ibus.EngineBase):
   def convert_and_emit(self, event):
     #print self.__state.getState()
     #print event
+    print "space: " + str(self.__space_mode) + ", tenkey: " + str(self.__tenkey_mode) + ", shift: " + str(self.__shift_mode) + ", control: " + str(self.__control_mode)
     if self.__space_mode:
       result = self.__space_mode_map[chr(event.keyval)]
       event.keyval = result[0]
