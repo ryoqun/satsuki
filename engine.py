@@ -94,14 +94,17 @@ class Engine(ibus.EngineBase):
 
   def __init__(self, bus, object_path):
       super(Engine, self).__init__(bus, object_path)
-      self.__buffer = None
-      self.__space_mode = False
-      self.__control_mode = False
-      self.__tenkey_mode = False
-      self.__shift_mode = False
       self.__state = StateMachine(self)
+      self.reset_state(self)
 
-  def convert_and_emit(self, event):
+  def reset_state(self):
+    self.__buffer = None
+    self.__space_mode = False
+    self.__control_mode = False
+    self.__tenkey_mode = False
+    self.__shift_mode = False
+
+  def emit(self, event):
     #print self.__state.getState()
     #print event
     print "space: " + str(self.__space_mode) + ", tenkey: " + str(self.__tenkey_mode) + ", shift: " + str(self.__shift_mode) + ", control: " + str(self.__control_mode)
@@ -150,7 +153,7 @@ class Engine(ibus.EngineBase):
 
   def flush(self):
     if self.__buffer:
-      self.convert_and_emit(self.__buffer)
+      self.emit(self.__buffer)
     self.__buffer = None
 
   def emit(self, event):
@@ -171,23 +174,19 @@ class Engine(ibus.EngineBase):
     self.__tenkey_mode = flag
 
   def process_key_event(self, keyval, keycode, state):
-      try:
-        if keyval == 0 and keycode == 89:
-          self.__buffer = None
-          self.__space_mode = False
-          self.__control_mode = False
-          self.__tenkey_mode = False
-          self.__shift_mode = False
+    try:
+      if keyval == 0 and keycode == 89:
+        self.reset_state()
 
-        if self.__is_pressed(state):
-          self.__state.keydown(KeyDown(keyval, keycode, state))
-        else:
-          self.__state.keyup(KeyUp(keyval, keycode, state))
+      if self.__is_pressed(state):
+        self.__state.keydown(KeyDown(keyval, keycode, state))
+      else:
+        self.__state.keyup(KeyUp(keyval, keycode, state))
 
-      except Exception as exception:
-        print exception
+    except Exception as exception:
+      print exception
 
-      return True
+    return True
 
   def __is_pressed(self, state):
     return ((state & modifier.RELEASE_MASK) == 0)

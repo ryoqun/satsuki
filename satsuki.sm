@@ -24,7 +24,7 @@ Normal
     {}
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 
 Shift
@@ -33,13 +33,13 @@ Shift
 {
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
   keyup(event) [ event.name == "shift" ]
     pop
     {}
   keyup(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 
 Tenkey
@@ -48,13 +48,13 @@ Tenkey
 {
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
   keyup(event) [ event.name == "tenkey" ]
     pop
     {}
   keyup(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 %%
 
@@ -79,7 +79,7 @@ PreSpace {
 
   keydown(event)
     Space
-    { space_mode(True); convert_and_emit(event); }
+    { space_mode(True); emit(event); }
 }
 
 Space
@@ -100,7 +100,7 @@ Space
 
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 
   keyup(event) [ event.name == "space" ]
     pop
@@ -108,7 +108,7 @@ Space
 
   keyup(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 %%
 
@@ -161,29 +161,29 @@ PreSlashControl {
 SemiZKeyControl {
   keydown(event)
     ZKeyControl
-    { control_mode(True); flush(); convert_and_emit(event); }
+    { control_mode(True); flush(); emit(event); }
 
   keyup(event) [ event.name == "z" ]
     pop
-    { emit_z(); flush(); convert_and_emit(event); }
+    { emit_z(); flush(); emit(event); }
 
   keyup(event)
     ZKeyControl
-    { control_mode(True); flush(); convert_and_emit(event); }
+    { control_mode(True); flush(); emit(event); }
 }
 
 SemiSlashControl {
   keydown(event)
     SlashControl
-    { control_mode(True); flush(); convert_and_emit(event); }
+    { control_mode(True); flush(); emit(event); }
 
   keyup(event) [ event.name == "slash" ]
     pop
-    { emit_slash(); flush(); convert_and_emit(event); }
+    { emit_slash(); flush(); emit(event); }
 
   keyup(event)
     SlashControl
-    { control_mode(True); flush(); convert_and_emit(event); }
+    { control_mode(True); flush(); emit(event); }
 }
 
 ZKeyControl
@@ -196,7 +196,7 @@ ZKeyControl
 
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 
   keyup(event) [ event.name == "z" ]
     pop
@@ -204,7 +204,7 @@ ZKeyControl
 
   keyup(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 
 SlashControl
@@ -217,7 +217,7 @@ SlashControl
 
   keydown(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 
   keyup(event) [ event.name == "slash" ]
     pop
@@ -225,6 +225,6 @@ SlashControl
 
   keyup(event)
     nil
-    { convert_and_emit(event); }
+    { emit(event); }
 }
 %%
