@@ -95,7 +95,7 @@ class Engine(ibus.EngineBase):
   def __init__(self, bus, object_path):
       super(Engine, self).__init__(bus, object_path)
       self.__state = StateMachine(self)
-      self.reset_state(self)
+      self.reset_state()
 
   def reset_state(self):
     self.__buffer = None
@@ -128,19 +128,19 @@ class Engine(ibus.EngineBase):
     if not self.__is_pressed(event.state):
       event.state = event.state | 1073741824
 
-    self.emit(event)
+    self.do_emit(event)
 
   def emit_space(self):
-    self.emit(KeyDown(keysyms.space, 57, 0))
-    self.emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
+    self.do_emit(KeyDown(keysyms.space, 57, 0))
+    self.do_emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
 
   def emit_z(self):
-    self.emit(KeyDown(keysyms.z, 44, 0))
-    self.emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
+    self.do_emit(KeyDown(keysyms.z, 44, 0))
+    self.do_emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
 
   def emit_slash(self):
-    self.emit(KeyDown(keysyms.slash, 53, 0))
-    self.emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
+    self.do_emit(KeyDown(keysyms.slash, 53, 0))
+    self.do_emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
 
   def emit_control_down(self):
     pass
@@ -156,7 +156,7 @@ class Engine(ibus.EngineBase):
       self.emit(self.__buffer)
     self.__buffer = None
 
-  def emit(self, event):
+  def do_emit(self, event):
     print "emit"
     print "name: " + str(event.name) + " keyval: " + str(event.keyval) + " keycode: " + str(event.keycode) + " state: " + str(event.state)
     self.__forward_key_event(event.keyval, event.keycode, event.state)
@@ -174,6 +174,7 @@ class Engine(ibus.EngineBase):
     self.__tenkey_mode = flag
 
   def process_key_event(self, keyval, keycode, state):
+    print "aaa"
     try:
       if keyval == 0 and keycode == 89:
         self.reset_state()

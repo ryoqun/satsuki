@@ -8,13 +8,13 @@
 Normal
 {
   keydown(event) [ event.name == "space" ]
-    push(SpaceMap::PreSpace)
+    push(PreSpace)
     {}
   keydown(event) [ event.name == "slash" ]
-    push(ControlMap::PreSlashControl)
+    push(PreSlashControl)
     {}
   keydown(event) [ event.name == "z" ]
-    push(ControlMap::PreZKeyControl)
+    push(PreZKeyControl)
     {}
   keydown(event) [ event.name == "shift" ]
     push(Shift)
@@ -56,21 +56,18 @@ Tenkey
     nil
     { emit(event); }
 }
-%%
 
-%map SpaceMap
-%%
 PreSpace {
   keyup(event) [ event.name == "space" ]
     pop
     { emit_space(); }
 
   keydown(event) [ event.name == "slash" ]
-    Space/push(ControlMap::PreSlashControl)
+    Space/push(PreSlashControl)
     {}
 
   keydown(event) [ event.name == "z" ]
-    Space/push(ControlMap::PreZKeyControl)
+    Space/push(PreZKeyControl)
     {}
 
   keydown(event) [ event.name == "space" ]
@@ -87,11 +84,11 @@ Space
   Exit { space_mode(False); }
 {
   keydown(event) [ event.name == "slash" ]
-    push(ControlMap::PreSlashControl)
+    push(PreSlashControl)
     {}
 
   keydown(event) [ event.name == "z" ]
-    push(ControlMap::PreZKeyControl)
+    push(PreZKeyControl)
     {}
 
   keydown(event) [ event.name == "space" ]
@@ -110,25 +107,14 @@ Space
     nil
     { emit(event); }
 }
-%%
 
-%map ShiftMap
-%%
-%%
-
-%map NumMap
-%%
-%%
-
-%map ControlMap
-%%
 PreZKeyControl {
   keydown(event) [ event.name == "z" ]
     ZKeyControl
     {}
 
   keydown(event) [ event.name == "space" ]
-    ZKeyControl/push(SpaceMap::PreSpace)
+    ZKeyControl/push(PreSpace)
     {}
 
   keydown(event)
@@ -146,7 +132,7 @@ PreSlashControl {
     {}
 
   keydown(event) [ event.name == "space" ]
-    SlashControl/push(SpaceMap::PreSpace)
+    SlashControl/push(PreSpace)
     {}
 
   keydown(event)
