@@ -58,6 +58,10 @@ Space
     push(ControlMap::PreZKeyControl)
     {}
 
+  keydown(event) [ event.name == "space" ]
+    nil
+    {}
+
   keydown(event)
     nil
     { convert_and_emit(event); }
@@ -68,7 +72,7 @@ Space
 
   keyup(event)
     nil
-    {}
+    { convert_and_emit(event); }
 }
 %%
 
@@ -83,40 +87,72 @@ Space
 %map ControlMap
 %%
 PreZKeyControl {
-  keyup(event) [ event.name == "z" ]
-    pop
-    { emit_z(); }
+  keydown(event) [ event.name == "z" ]
+    ZKeyControl
+    {}
 
   keydown(event)
     ZKeyControl
     { emit_control_down(); }
+
+  keyup(event) [ event.name == "z" ]
+    pop
+    { emit_z(); }
 }
 
 PreSlashControl {
-  keyup(event) [ event.name == "slash" ]
-    pop
-    { emit_slash(); }
+  keydown(event) [ event.name == "slash" ]
+    SlashControl
+    {}
 
   keydown(event)
     SlashControl
     { emit_control_down(); }
+
+  keyup(event) [ event.name == "slash" ]
+    pop
+    { emit_slash(); }
 }
 
 ZKeyControl
   Entry { control_mode(True); }
   Exit { control_mode(False); }
 {
+  keydown(event) [ event.name == "z" ]
+    nil
+    {}
+
+  keydown(event)
+    nil
+    { convert_and_emit(event); }
+
   keyup(event) [ event.name == "z" ]
     pop
     {}
+
+  keyup(event)
+    nil
+    { convert_and_emit(event); }
 }
 
 SlashControl
   Entry { control_mode(True); }
   Exit { control_mode(False); }
 {
+  keydown(event) [ event.name == "slash" ]
+    nil
+    {}
+
+  keydown(event)
+    nil
+    { convert_and_emit(event); }
+
   keyup(event) [ event.name == "slash" ]
     pop
     {}
+
+  keyup(event)
+    nil
+    { convert_and_emit(event); }
 }
 %%

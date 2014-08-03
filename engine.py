@@ -118,15 +118,16 @@ class Engine(ibus.EngineBase):
       self.__tenkey_mode = False
       self.__shift_mode = False
       self.__state = StateMachine(self)
-      print "aaaaa"
+      #print "aaaaa"
 
   def convert_and_emit(self, event):
     #print self.__state.getState()
+    print "convderrt"
     print event.name
     print event.keyval
     print event.keycode
     print event.state
-    print event
+    #print event
     if self.__space_mode:
       result = self.__space_mode_map[chr(event.keyval)]
       state = 0
@@ -139,7 +140,7 @@ class Engine(ibus.EngineBase):
       event.state = state
 
     if self.__control_mode:
-      state = state | modifier.CONTROL_MASK
+      event.state = event.state | modifier.CONTROL_MASK
 
     self.emit(event)
 
@@ -173,11 +174,12 @@ class Engine(ibus.EngineBase):
 
   def process_key_event(self, keyval, keycode, state):
       try:
-        print "before"
-        print keyval
-        print keycode
-        print state
-        print "end"
+        #print "before"
+        #print keyval
+        #print keycode
+        #print state
+        #print "end"
+        print self.__state.getState()
         if self.__is_pressed(state):
           self.__state.keydown(KeyDown(keyval, keycode, state))
         else:
@@ -203,9 +205,9 @@ class Engine(ibus.EngineBase):
         #  self.__forward_space_mode_key_event(keyval, keycode, state)
         #  return True
 
-        if self.__control_mode:
-          self.__forward_control_mode_key_event(keyval, keycode, state)
-          return True
+        #if self.__control_mode:
+        #  self.__forward_control_mode_key_event(keyval, keycode, state)
+        #  return True
 
         if self.__tenkey_mode:
           self.__forward_tenkey_mode_key_event(keyval, keycode, state)
