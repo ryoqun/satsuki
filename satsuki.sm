@@ -93,7 +93,7 @@ PreZKeyControl {
 
   keydown(event)
     ZKeyControl
-    { emit_control_down(); }
+    { control_mode(True); convert_and_emit(event);}
 
   keyup(event) [ event.name == "z" ]
     pop
@@ -107,7 +107,7 @@ PreSlashControl {
 
   keydown(event)
     SlashControl
-    { emit_control_down(); }
+    { control_mode(True); convert_and_emit(event); }
 
   keyup(event) [ event.name == "slash" ]
     pop

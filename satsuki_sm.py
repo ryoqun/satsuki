@@ -200,7 +200,8 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.emit_control_down()
+                ctxt.control_mode(True)
+                ctxt.convert_and_emit(event)
             finally:
                 fsm.setState(ControlMap.ZKeyControl)
                 fsm.getState().Entry(fsm)
@@ -232,7 +233,8 @@ class ControlMap_PreSlashControl(ControlMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.emit_control_down()
+                ctxt.control_mode(True)
+                ctxt.convert_and_emit(event)
             finally:
                 fsm.setState(ControlMap.SlashControl)
                 fsm.getState().Entry(fsm)
