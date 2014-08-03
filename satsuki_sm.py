@@ -47,6 +47,86 @@ class MainMap_Normal(MainMap_Default):
             pass
             fsm.pushState(ControlMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
+        elif  event.name == "shift"  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.Shift)
+            fsm.getState().Entry(fsm)
+        elif  event.name == "tenkey"  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.Tenkey)
+            fsm.getState().Entry(fsm)
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.setState(endState)
+
+
+class MainMap_Shift(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.shift_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.shift_mode(False)
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.convert_and_emit(event)
+        finally:
+            fsm.setState(endState)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.name == "shift"  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.popState()
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.setState(endState)
+
+
+class MainMap_Tenkey(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.tenkey_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.tenkey_mode(False)
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.convert_and_emit(event)
+        finally:
+            fsm.setState(endState)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.name == "tenkey"  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.popState()
         else:
             endState = fsm.getState()
             fsm.clearState()
@@ -59,6 +139,8 @@ class MainMap_Normal(MainMap_Default):
 class MainMap(object):
 
     Normal = MainMap_Normal('MainMap.Normal', 0)
+    Shift = MainMap_Shift('MainMap.Shift', 1)
+    Tenkey = MainMap_Tenkey('MainMap.Tenkey', 2)
     Default = MainMap_Default('MainMap.Default', -1)
 
 class SpaceMap_Default(TurnstileState):
@@ -165,8 +247,8 @@ class SpaceMap_Space(SpaceMap_Default):
 
 class SpaceMap(object):
 
-    PreSpace = SpaceMap_PreSpace('SpaceMap.PreSpace', 1)
-    Space = SpaceMap_Space('SpaceMap.Space', 2)
+    PreSpace = SpaceMap_PreSpace('SpaceMap.PreSpace', 3)
+    Space = SpaceMap_Space('SpaceMap.Space', 4)
     Default = SpaceMap_Default('SpaceMap.Default', -1)
 
 class ShiftMap_Default(TurnstileState):
@@ -334,10 +416,10 @@ class ControlMap_SlashControl(ControlMap_Default):
 
 class ControlMap(object):
 
-    PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 3)
-    PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 4)
-    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 5)
-    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 6)
+    PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 5)
+    PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 6)
+    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 7)
+    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 8)
     Default = ControlMap_Default('ControlMap.Default', -1)
 
 class Turnstile_sm(statemap.FSMContext):

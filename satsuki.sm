@@ -16,7 +16,43 @@ Normal
   keydown(event) [ event.name == "z" ]
     push(ControlMap::PreZKeyControl)
     {}
+  keydown(event) [ event.name == "shift" ]
+    push(Shift)
+    {}
+  keydown(event) [ event.name == "tenkey" ]
+    push(Tenkey)
+    {}
   keydown(event)
+    nil
+    { convert_and_emit(event); }
+}
+
+Shift
+  Entry { shift_mode(True); }
+  Exit { shift_mode(False); }
+{
+  keydown(event)
+    nil
+    { convert_and_emit(event); }
+  keyup(event) [ event.name == "shift" ]
+    pop
+    {}
+  keyup(event)
+    nil
+    { convert_and_emit(event); }
+}
+
+Tenkey
+  Entry { tenkey_mode(True); }
+  Exit { tenkey_mode(False); }
+{
+  keydown(event)
+    nil
+    { convert_and_emit(event); }
+  keyup(event) [ event.name == "tenkey" ]
+    pop
+    {}
+  keyup(event)
     nil
     { convert_and_emit(event); }
 }

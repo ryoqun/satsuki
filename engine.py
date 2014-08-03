@@ -38,6 +38,10 @@ class KeyEvent:
       self.name = "slash"
     elif self.keyval == keysyms.z:
       self.name = "z"
+    elif keyval == 65315 or keyval == 65329:
+      self.name = "shift"
+    elif keyval == 65314 or keyval == 65332:
+      self.name = "tenkey"
     else:
       self.name = "none"
     
@@ -128,6 +132,15 @@ class Engine(ibus.EngineBase):
       event.keyval = result[0]
       event.keycode = result[1]
 
+    if self.__tenkey_mode:
+      result = self.__tenkey_mode_map[chr(event.keyval)]
+      event.keyval = result[0]
+      event.keycode = result[1]
+
+    if self.__shift_mode:
+      event.keyval = ord(chr(event.keyval).upper())
+      event.state = event.state | 1
+
     if self.__control_mode:
       event.state = event.state | modifier.CONTROL_MASK
 
@@ -165,6 +178,12 @@ class Engine(ibus.EngineBase):
   def control_mode(self, flag):
     self.__control_mode = flag
 
+  def shift_mode(self, flag):
+    self.__shift_mode = flag
+
+  def tenkey_mode(self, flag):
+    self.__tenkey_mode = flag
+
   def process_key_event(self, keyval, keycode, state):
       try:
         #print "before"
@@ -186,13 +205,13 @@ class Engine(ibus.EngineBase):
         #if processed:
         #  return True
 
-        processed = self.__update_tenkey_mode(keyval, keycode, state)
-        if processed:
-          return True
+        #processed = self.__update_tenkey_mode(keyval, keycode, state)
+        #if processed:
+        #  return True
 
-        processed = self.__update_shift_mode(keyval, keycode, state)
-        if processed:
-          return True
+        #processed = self.__update_shift_mode(keyval, keycode, state)
+        #if processed:
+        #  return True
 
         #if self.__space_mode:
         #  self.__forward_space_mode_key_event(keyval, keycode, state)
@@ -202,13 +221,13 @@ class Engine(ibus.EngineBase):
         #  self.__forward_control_mode_key_event(keyval, keycode, state)
         #  return True
 
-        if self.__tenkey_mode:
-          self.__forward_tenkey_mode_key_event(keyval, keycode, state)
-          return True
+        #if self.__tenkey_mode:
+        #  self.__forward_tenkey_mode_key_event(keyval, keycode, state)
+        #  return True
 
-        if self.__shift_mode:
-          self.__forward_shift_mode_key_event(keyval, keycode, state)
-          return True
+        #if self.__shift_mode:
+        #  self.__forward_shift_mode_key_event(keyval, keycode, state)
+        #  return True
 
       except Exception as exception:
         print exception
