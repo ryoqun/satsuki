@@ -132,8 +132,8 @@ PreZKeyControl {
     {}
 
   keydown(event)
-    ZKeyControl
-    { control_mode(True); convert_and_emit(event);}
+    SemiZKeyControl
+    { buffer(event);}
 
   keyup(event) [ event.name == "z" ]
     pop
@@ -150,15 +150,29 @@ PreSlashControl {
     {}
 
   keydown(event)
-    SlashControl
-    { control_mode(True); convert_and_emit(event); }
+    SemiSlashControl
+    { buffer(event); }
 
   keyup(event) [ event.name == "slash" ]
     pop
     { emit_slash(); }
 }
 
-SimiSlashControl {
+SemiZKeyControl {
+  keydown(event)
+    ZKeyControl
+    { control_mode(True); flush(); convert_and_emit(event); }
+
+  keyup(event) [ event.name == "z" ]
+    pop
+    { emit_z(); flush(); convert_and_emit(event); }
+
+  keyup(event)
+    ZKeyControl
+    { control_mode(True); flush(); convert_and_emit(event); }
+}
+
+SemiSlashControl {
   keydown(event)
     SlashControl
     { control_mode(True); flush(); convert_and_emit(event); }

@@ -94,6 +94,7 @@ class Engine(ibus.EngineBase):
 
   def __init__(self, bus, object_path):
       super(Engine, self).__init__(bus, object_path)
+      self.__buffer = None
       self.__space_mode = False
       self.__control_mode = False
       self.__tenkey_mode = False
@@ -144,6 +145,14 @@ class Engine(ibus.EngineBase):
   def emit_control_up(self):
     pass
 
+  def buffer(self, event):
+    self.__buffer = event
+
+  def flush(self):
+    if self.__buffer:
+      self.convert_and_emit(self.__buffer)
+    self.__buffer = None
+
   def emit(self, event):
     print "emit"
     print "name: " + str(event.name) + " keyval: " + str(event.keyval) + " keycode: " + str(event.keycode) + " state: " + str(event.state)
@@ -163,6 +172,13 @@ class Engine(ibus.EngineBase):
 
   def process_key_event(self, keyval, keycode, state):
       try:
+        if keyval == 0 and keycode == 89:
+          self.__buffer = None
+          self.__space_mode = False
+          self.__control_mode = False
+          self.__tenkey_mode = False
+          self.__shift_mode = False
+
         if self.__is_pressed(state):
           self.__state.keydown(KeyDown(keyval, keycode, state))
         else:

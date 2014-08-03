@@ -290,10 +290,9 @@ class ControlMap_PreZKeyControl(ControlMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.control_mode(True)
-                ctxt.convert_and_emit(event)
+                ctxt.buffer(event)
             finally:
-                fsm.setState(ControlMap.ZKeyControl)
+                fsm.setState(ControlMap.SemiZKeyControl)
                 fsm.getState().Entry(fsm)
 
 
@@ -331,10 +330,9 @@ class ControlMap_PreSlashControl(ControlMap_Default):
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
-                ctxt.control_mode(True)
-                ctxt.convert_and_emit(event)
+                ctxt.buffer(event)
             finally:
-                fsm.setState(ControlMap.SlashControl)
+                fsm.setState(ControlMap.SemiSlashControl)
                 fsm.getState().Entry(fsm)
 
 
@@ -350,7 +348,44 @@ class ControlMap_PreSlashControl(ControlMap_Default):
         else:
             ControlMap_Default.keyup(self, fsm, event)
         
-class ControlMap_SimiSlashControl(ControlMap_Default):
+class ControlMap_SemiZKeyControl(ControlMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        fsm.getState().Exit(fsm)
+        fsm.clearState()
+        try:
+            ctxt.control_mode(True)
+            ctxt.flush()
+            ctxt.convert_and_emit(event)
+        finally:
+            fsm.setState(ControlMap.ZKeyControl)
+            fsm.getState().Entry(fsm)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.name == "z"  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_z()
+                ctxt.flush()
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.popState()
+        else:
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.control_mode(True)
+                ctxt.flush()
+                ctxt.convert_and_emit(event)
+            finally:
+                fsm.setState(ControlMap.ZKeyControl)
+                fsm.getState().Entry(fsm)
+
+
+class ControlMap_SemiSlashControl(ControlMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
@@ -471,9 +506,10 @@ class ControlMap(object):
 
     PreZKeyControl = ControlMap_PreZKeyControl('ControlMap.PreZKeyControl', 5)
     PreSlashControl = ControlMap_PreSlashControl('ControlMap.PreSlashControl', 6)
-    SimiSlashControl = ControlMap_SimiSlashControl('ControlMap.SimiSlashControl', 7)
-    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 8)
-    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 9)
+    SemiZKeyControl = ControlMap_SemiZKeyControl('ControlMap.SemiZKeyControl', 7)
+    SemiSlashControl = ControlMap_SemiSlashControl('ControlMap.SemiSlashControl', 8)
+    ZKeyControl = ControlMap_ZKeyControl('ControlMap.ZKeyControl', 9)
+    SlashControl = ControlMap_SlashControl('ControlMap.SlashControl', 10)
     Default = ControlMap_Default('ControlMap.Default', -1)
 
 class Turnstile_sm(statemap.FSMContext):
