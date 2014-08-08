@@ -1,5 +1,6 @@
 %class Turnstile
 %package Turnstile
+%header engine.hpp
 
 %start MainMap::Normal
 
