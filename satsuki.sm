@@ -8,19 +8,19 @@
 %%
 Normal
 {
-  keydown(event: KeyEvent) [ event.name == "space" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SPACE ]
     push(PreSpace)
     {}
-  keydown(event: KeyEvent) [ event.name == "slash" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SLASH ]
     push(PreSlashControl)
     {}
-  keydown(event: KeyEvent) [ event.name == "z" ]
+  keydown(event: KeyEvent) [ event.name == KEY_Z ]
     push(PreZKeyControl)
     {}
-  keydown(event: KeyEvent) [ event.name == "shift" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SHIFT ]
     push(Shift)
     {}
-  keydown(event: KeyEvent) [ event.name == "tenkey" ]
+  keydown(event: KeyEvent) [ event.name == KEY_TENKEY ]
     push(Tenkey)
     {}
   keydown(event: KeyEvent)
@@ -35,7 +35,7 @@ Shift
   keydown(event: KeyEvent)
     nil
     { emit(event); }
-  keyup(event: KeyEvent) [ event.name == "shift" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SHIFT ]
     pop
     {}
   keyup(event: KeyEvent)
@@ -50,7 +50,7 @@ Tenkey
   keydown(event: KeyEvent)
     nil
     { emit(event); }
-  keyup(event: KeyEvent) [ event.name == "tenkey" ]
+  keyup(event: KeyEvent) [ event.name == KEY_TENKEY ]
     pop
     {}
   keyup(event: KeyEvent)
@@ -59,19 +59,19 @@ Tenkey
 }
 
 PreSpace {
-  keyup(event: KeyEvent) [ event.name == "space" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SPACE ]
     pop
     { emit_space(); }
 
-  keydown(event: KeyEvent) [ event.name == "slash" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SLASH ]
     Space/push(PreSlashControl)
     {}
 
-  keydown(event: KeyEvent) [ event.name == "z" ]
+  keydown(event: KeyEvent) [ event.name == KEY_Z ]
     Space/push(PreZKeyControl)
     {}
 
-  keydown(event: KeyEvent) [ event.name == "space" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SPACE ]
     Space
     {}
 
@@ -84,15 +84,15 @@ Space
   Entry { space_mode(True); }
   Exit { space_mode(False); }
 {
-  keydown(event: KeyEvent) [ event.name == "slash" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SLASH ]
     push(PreSlashControl)
     {}
 
-  keydown(event: KeyEvent) [ event.name == "z" ]
+  keydown(event: KeyEvent) [ event.name == KEY_Z ]
     push(PreZKeyControl)
     {}
 
-  keydown(event: KeyEvent) [ event.name == "space" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SPACE ]
     nil
     {}
 
@@ -100,7 +100,7 @@ Space
     nil
     { emit(event); }
 
-  keyup(event: KeyEvent) [ event.name == "space" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SPACE ]
     pop
     {}
 
@@ -110,11 +110,11 @@ Space
 }
 
 PreZKeyControl {
-  keydown(event: KeyEvent) [ event.name == "z" ]
+  keydown(event: KeyEvent) [ event.name == KEY_Z ]
     ZKeyControl
     {}
 
-  keydown(event: KeyEvent) [ event.name == "space" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SPACE ]
     ZKeyControl/push(PreSpace)
     {}
 
@@ -122,17 +122,17 @@ PreZKeyControl {
     SemiZKeyControl
     { buffer(event);}
 
-  keyup(event: KeyEvent) [ event.name == "z" ]
+  keyup(event: KeyEvent) [ event.name == KEY_Z ]
     pop
     { emit_z(); }
 }
 
 PreSlashControl {
-  keydown(event: KeyEvent) [ event.name == "slash" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SLASH ]
     SlashControl
     {}
 
-  keydown(event: KeyEvent) [ event.name == "space" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SPACE ]
     SlashControl/push(PreSpace)
     {}
 
@@ -140,7 +140,7 @@ PreSlashControl {
     SemiSlashControl
     { buffer(event); }
 
-  keyup(event: KeyEvent) [ event.name == "slash" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SLASH ]
     pop
     { emit_slash(); }
 }
@@ -150,7 +150,7 @@ SemiZKeyControl {
     ZKeyControl
     { control_mode(True); flush(); emit(event); }
 
-  keyup(event: KeyEvent) [ event.name == "z" ]
+  keyup(event: KeyEvent) [ event.name == KEY_Z ]
     pop
     { emit_z(); flush(); emit(event); }
 
@@ -164,7 +164,7 @@ SemiSlashControl {
     SlashControl
     { control_mode(True); flush(); emit(event); }
 
-  keyup(event: KeyEvent) [ event.name == "slash" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SLASH ]
     pop
     { emit_slash(); flush(); emit(event); }
 
@@ -177,7 +177,7 @@ ZKeyControl
   Entry { control_mode(True); }
   Exit { control_mode(False); }
 {
-  keydown(event: KeyEvent) [ event.name == "z" ]
+  keydown(event: KeyEvent) [ event.name == KEY_Z ]
     nil
     {}
 
@@ -185,7 +185,7 @@ ZKeyControl
     nil
     { emit(event); }
 
-  keyup(event: KeyEvent) [ event.name == "z" ]
+  keyup(event: KeyEvent) [ event.name == KEY_Z ]
     pop
     {}
 
@@ -198,7 +198,7 @@ SlashControl
   Entry { control_mode(True); }
   Exit { control_mode(False); }
 {
-  keydown(event: KeyEvent) [ event.name == "slash" ]
+  keydown(event: KeyEvent) [ event.name == KEY_SLASH ]
     nil
     {}
 
@@ -206,7 +206,7 @@ SlashControl
     nil
     { emit(event); }
 
-  keyup(event: KeyEvent) [ event.name == "slash" ]
+  keyup(event: KeyEvent) [ event.name == KEY_SLASH ]
     pop
     {}
 

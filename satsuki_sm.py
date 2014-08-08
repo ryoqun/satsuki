@@ -32,27 +32,27 @@ class MainMap_Normal(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "space"  :
+        if  event.name == KEY_SPACE  :
             # No actions.
             pass
             fsm.pushState(MainMap.PreSpace)
             fsm.getState().Entry(fsm)
-        elif  event.name == "slash"  :
+        elif  event.name == KEY_SLASH  :
             # No actions.
             pass
             fsm.pushState(MainMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "z"  :
+        elif  event.name == KEY_Z  :
             # No actions.
             pass
             fsm.pushState(MainMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "shift"  :
+        elif  event.name == KEY_SHIFT  :
             # No actions.
             pass
             fsm.pushState(MainMap.Shift)
             fsm.getState().Entry(fsm)
-        elif  event.name == "tenkey"  :
+        elif  event.name == KEY_TENKEY  :
             # No actions.
             pass
             fsm.pushState(MainMap.Tenkey)
@@ -87,7 +87,7 @@ class MainMap_Shift(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "shift"  :
+        if  event.name == KEY_SHIFT  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -122,7 +122,7 @@ class MainMap_Tenkey(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "tenkey"  :
+        if  event.name == KEY_TENKEY  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -140,7 +140,7 @@ class MainMap_PreSpace(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -148,7 +148,7 @@ class MainMap_PreSpace(MainMap_Default):
             fsm.getState().Entry(fsm)
             fsm.pushState(MainMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "z"  :
+        elif  event.name == KEY_Z  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -156,7 +156,7 @@ class MainMap_PreSpace(MainMap_Default):
             fsm.getState().Entry(fsm)
             fsm.pushState(MainMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "space"  :
+        elif  event.name == KEY_SPACE  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -175,7 +175,7 @@ class MainMap_PreSpace(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "space"  :
+        if  event.name == KEY_SPACE  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -197,17 +197,17 @@ class MainMap_Space(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             # No actions.
             pass
             fsm.pushState(MainMap.PreSlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "z"  :
+        elif  event.name == KEY_Z  :
             # No actions.
             pass
             fsm.pushState(MainMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "space"  :
+        elif  event.name == KEY_SPACE  :
             # No actions.
             pass
         else:
@@ -221,7 +221,7 @@ class MainMap_Space(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "space"  :
+        if  event.name == KEY_SPACE  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -239,13 +239,13 @@ class MainMap_PreZKeyControl(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "z"  :
+        if  event.name == KEY_Z  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
             fsm.setState(MainMap.ZKeyControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "space"  :
+        elif  event.name == KEY_SPACE  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -265,7 +265,7 @@ class MainMap_PreZKeyControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "z"  :
+        if  event.name == KEY_Z  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -279,13 +279,13 @@ class MainMap_PreSlashControl(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
             fsm.setState(MainMap.SlashControl)
             fsm.getState().Entry(fsm)
-        elif  event.name == "space"  :
+        elif  event.name == KEY_SPACE  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -305,7 +305,7 @@ class MainMap_PreSlashControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -331,7 +331,7 @@ class MainMap_SemiZKeyControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "z"  :
+        if  event.name == KEY_Z  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -368,7 +368,7 @@ class MainMap_SemiSlashControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
@@ -401,7 +401,7 @@ class MainMap_ZKeyControl(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "z"  :
+        if  event.name == KEY_Z  :
             # No actions.
             pass
         else:
@@ -415,7 +415,7 @@ class MainMap_ZKeyControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "z"  :
+        if  event.name == KEY_Z  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
@@ -441,7 +441,7 @@ class MainMap_SlashControl(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             # No actions.
             pass
         else:
@@ -455,7 +455,7 @@ class MainMap_SlashControl(MainMap_Default):
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
-        if  event.name == "slash"  :
+        if  event.name == KEY_SLASH  :
             fsm.getState().Exit(fsm)
             # No actions.
             pass
