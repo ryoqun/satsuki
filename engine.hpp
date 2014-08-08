@@ -1,12 +1,7 @@
-struct KeyEvent {
-  int name;
-};
+  struct KeyEvent {
+    char *name;
+  };
 
-#define KEY_SPACE 0
-#define KEY_SLASH 1
-#define KEY_Z 2
-#define KEY_SHIFT 3
-#define KEY_TENKEY 4
 #define True true
 #define False false
 
