@@ -11,19 +11,25 @@ class KeyEvent:
     self.keyval = keyval
     self.keycode = keycode
     self.state = state
+    self.is_space = self.is_slash = self.is_z = self.is_tenkey = self.is_shift = False
     if self.keyval == keysyms.space:
       self.name = "space"
+      self.is_space = True
     elif self.keyval == keysyms.slash:
       self.name = "slash"
+      self.is_slash = True
     elif self.keyval == keysyms.z:
       self.name = "z"
+      self.is_z = True
     elif keyval == 65315 or keyval == 65329:
       self.name = "shift"
+      self.is_shift = True
     elif keyval == 65314 or keyval == 65332:
       self.name = "tenkey"
+      self.is_tenkey = True
     else:
       self.name = "none"
-    
+
 class KeyDown(KeyEvent):
   pass
 

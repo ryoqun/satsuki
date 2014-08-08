@@ -1,5 +1,5 @@
 struct KeyEvent {
-  int name;
+  bool is_space, is_slash, is_z, is_tenkey, is_shift;
 };
 
 #define KEY_SPACE 0
