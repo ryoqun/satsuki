@@ -37,7 +37,8 @@ class KeyUp(KeyEvent):
   pass
 
 class StateMachine(satsuki_sm.Turnstile_sm):
-  pass
+  def state_list(self):
+    return self._state_stack + [self._state]
 
 class Engine(ibus.EngineBase):
   __tenkey_mode_map = {
@@ -63,6 +64,7 @@ class Engine(ibus.EngineBase):
     'l': [65363,    106, 0],
     ';': [65293,     28, 0],
   }
+
 
   __space_mode_map = {
     'q': [ord('!'),   2, 1],
@@ -113,16 +115,18 @@ class Engine(ibus.EngineBase):
   def emit(self, event):
     #print self.__state.getState()
     #print event
-    print "space: " + str(self.__space_mode) + ", tenkey: " + str(self.__tenkey_mode) + ", shift: " + str(self.__shift_mode) + ", control: " + str(self.__control_mode)
+    #print "space: " + str(self.__space_mode) + ", tenkey: " + str(self.__tenkey_mode) + ", shift: " + str(self.__shift_mode) + ", control: " + str(self.__control_mode)
     if self.__space_mode:
-      result = self.__space_mode_map[chr(event.keyval)]
-      event.keyval = result[0]
-      event.keycode = result[1]
+      if chr(event.keyval) in self.__space_mode_map:
+        result = self.__space_mode_map[chr(event.keyval)]
+        event.keyval = result[0]
+        event.keycode = result[1]
 
     if self.__tenkey_mode:
-      result = self.__tenkey_mode_map[chr(event.keyval)]
-      event.keyval = result[0]
-      event.keycode = result[1]
+      if chr(event.keyval) in self.__tenkey_mode_map:
+        result = self.__tenkey_mode_map[chr(event.keyval)]
+        event.keyval = result[0]
+        event.keycode = result[1]
 
     if self.__shift_mode:
       event.keyval = ord(chr(event.keyval).upper())
@@ -163,8 +167,7 @@ class Engine(ibus.EngineBase):
     self.__buffer = None
 
   def do_emit(self, event):
-    print "emit"
-    print "name: " + str(event.name) + " keyval: " + str(event.keyval) + " keycode: " + str(event.keycode) + " state: " + str(event.state)
+    #print "name: " + str(event.name) + " keyval: " + str(event.keyval) + " keycode: " + str(event.keycode) + " state: " + str(event.state)
     self.__forward_key_event(event.keyval, event.keycode, event.state)
 
   def space_mode(self, flag):
@@ -180,8 +183,8 @@ class Engine(ibus.EngineBase):
     self.__tenkey_mode = flag
 
   def process_key_event(self, keyval, keycode, state):
-    print "aaa"
     try:
+      print(self.__state.state_list())
       if keyval == 0 and keycode == 89:
         self.reset_state()
 
@@ -189,6 +192,9 @@ class Engine(ibus.EngineBase):
         self.__state.keydown(KeyDown(keyval, keycode, state))
       else:
         self.__state.keyup(KeyUp(keyval, keycode, state))
+      print("=>")
+      print(self.__state.state_list())
+      print
 
     except Exception as exception:
       print exception
