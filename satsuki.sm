@@ -58,10 +58,32 @@ Tenkey
     { emit(event); }
 }
 
+PostSpace {
+  keyup(event: KeyEvent) [ event.is_space ]
+    pop
+    { pop_state(); }
+
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
+
+  keydown(event: KeyEvent)
+    nil
+    { emit(event); }
+}
+
 PreSpace {
   keyup(event: KeyEvent) [ event.is_space ]
     pop
     { emit_space(); }
+
+  keyup(event: KeyEvent) [ event.is_slash ]
+    PostSpace
+    { emit_slash(); }
+
+  keyup(event: KeyEvent) [ event.is_z ]
+    PostSpace
+    { emit_z(); }
 
   keydown(event: KeyEvent) [ event.is_slash ]
     Space/push(PreSlashControl)

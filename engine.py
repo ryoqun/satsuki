@@ -152,6 +152,9 @@ class Engine(ibus.EngineBase):
     self.do_emit(KeyDown(keysyms.slash, 53, 0))
     self.do_emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
 
+  def pop_state(self):
+    self.__state.popState()
+
   def emit_control_down(self):
     pass
 
