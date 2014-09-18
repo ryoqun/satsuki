@@ -72,6 +72,51 @@ PostSpace {
     { emit(event); }
 }
 
+NestedSpace
+  Entry { space_mode(True); }
+  Exit { space_mode(False); }
+{
+  keyup(event: KeyEvent) [ event.is_space ]
+    pop
+    { pop_state(); }
+
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
+
+  keydown(event: KeyEvent)
+    nil
+    { emit(event); }
+}
+
+PostZKeyControl {
+  keyup(event: KeyEvent) [ event.is_z ]
+    pop
+    { pop_state(); }
+
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
+
+  keydown(event: KeyEvent)
+    nil
+    { emit(event); }
+}
+
+PostSlashControl {
+  keyup(event: KeyEvent) [ event.is_slash ]
+    pop
+    { pop_state(); }
+
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
+
+  keydown(event: KeyEvent)
+    nil
+    { emit(event); }
+}
+
 PreSpace {
   keyup(event: KeyEvent) [ event.is_space ]
     pop
@@ -124,6 +169,14 @@ Space
 
   keyup(event: KeyEvent) [ event.is_space ]
     pop
+    {}
+
+  keyup(event: KeyEvent) [ event.is_slash ]
+    NestedSpace
+    {}
+
+  keyup(event: KeyEvent) [ event.is_z ]
+    NestedSpace
     {}
 
   keyup(event: KeyEvent)
@@ -203,12 +256,20 @@ ZKeyControl
     nil
     {}
 
+  keydown(event: KeyEvent) [ event.is_space ]
+    push(PreSpace)
+    {}
+
   keydown(event: KeyEvent)
     nil
     { emit(event); }
 
   keyup(event: KeyEvent) [ event.is_z ]
     pop
+    {}
+
+  keyup(event: KeyEvent) [ event.is_space ]
+    PostZKeyControl
     {}
 
   keyup(event: KeyEvent)
@@ -230,6 +291,10 @@ SlashControl
 
   keyup(event: KeyEvent) [ event.is_slash ]
     pop
+    {}
+
+  keyup(event: KeyEvent) [ event.is_space ]
+    PostSlashControl
     {}
 
   keyup(event: KeyEvent)

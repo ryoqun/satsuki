@@ -40,6 +40,10 @@ class StateMachine(satsuki_sm.Turnstile_sm):
   def state_list(self):
     return self._state_stack + [self._state]
 
+  def state_exit(self):
+    self._state_stack[-1].Exit(self)
+    return self._state_stack[-1]
+
 class Engine(ibus.EngineBase):
   __tenkey_mode_map = {
     'q': [ord('1'),   2, 0],
@@ -153,6 +157,9 @@ class Engine(ibus.EngineBase):
     self.do_emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
 
   def pop_state(self):
+    #print("aaaa")
+    self.__state.state_exit()
+    #print("bbb")
     self.__state.popState()
 
   def emit_control_down(self):

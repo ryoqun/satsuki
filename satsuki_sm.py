@@ -165,6 +165,101 @@ class MainMap_PostSpace(MainMap_Default):
                 fsm.setState(endState)
 
 
+class MainMap_NestedSpace(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.space_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.space_mode(False)
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.emit(event)
+        finally:
+            fsm.setState(endState)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_space  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.pop_state()
+            finally:
+                fsm.popState()
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
+
+class MainMap_PostZKeyControl(MainMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.emit(event)
+        finally:
+            fsm.setState(endState)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_z  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.pop_state()
+            finally:
+                fsm.popState()
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
+
+class MainMap_PostSlashControl(MainMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.emit(event)
+        finally:
+            fsm.setState(endState)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_slash  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.pop_state()
+            finally:
+                fsm.popState()
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
+
 class MainMap_PreSpace(MainMap_Default):
 
     def keydown(self, fsm, event):
@@ -271,6 +366,18 @@ class MainMap_Space(MainMap_Default):
             # No actions.
             pass
             fsm.popState()
+        elif  event.is_slash  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.NestedSpace)
+            fsm.getState().Entry(fsm)
+        elif  event.is_z  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.NestedSpace)
+            fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
             fsm.clearState()
@@ -449,6 +556,11 @@ class MainMap_ZKeyControl(MainMap_Default):
         if  event.is_z  :
             # No actions.
             pass
+        elif  event.is_space  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.PreSpace)
+            fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
             fsm.clearState()
@@ -465,6 +577,12 @@ class MainMap_ZKeyControl(MainMap_Default):
             # No actions.
             pass
             fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.PostZKeyControl)
+            fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
             fsm.clearState()
@@ -505,6 +623,12 @@ class MainMap_SlashControl(MainMap_Default):
             # No actions.
             pass
             fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.PostSlashControl)
+            fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
             fsm.clearState()
@@ -520,14 +644,17 @@ class MainMap(object):
     Shift = MainMap_Shift('MainMap.Shift', 1)
     Tenkey = MainMap_Tenkey('MainMap.Tenkey', 2)
     PostSpace = MainMap_PostSpace('MainMap.PostSpace', 3)
-    PreSpace = MainMap_PreSpace('MainMap.PreSpace', 4)
-    Space = MainMap_Space('MainMap.Space', 5)
-    PreZKeyControl = MainMap_PreZKeyControl('MainMap.PreZKeyControl', 6)
-    PreSlashControl = MainMap_PreSlashControl('MainMap.PreSlashControl', 7)
-    SemiZKeyControl = MainMap_SemiZKeyControl('MainMap.SemiZKeyControl', 8)
-    SemiSlashControl = MainMap_SemiSlashControl('MainMap.SemiSlashControl', 9)
-    ZKeyControl = MainMap_ZKeyControl('MainMap.ZKeyControl', 10)
-    SlashControl = MainMap_SlashControl('MainMap.SlashControl', 11)
+    NestedSpace = MainMap_NestedSpace('MainMap.NestedSpace', 4)
+    PostZKeyControl = MainMap_PostZKeyControl('MainMap.PostZKeyControl', 5)
+    PostSlashControl = MainMap_PostSlashControl('MainMap.PostSlashControl', 6)
+    PreSpace = MainMap_PreSpace('MainMap.PreSpace', 7)
+    Space = MainMap_Space('MainMap.Space', 8)
+    PreZKeyControl = MainMap_PreZKeyControl('MainMap.PreZKeyControl', 9)
+    PreSlashControl = MainMap_PreSlashControl('MainMap.PreSlashControl', 10)
+    SemiZKeyControl = MainMap_SemiZKeyControl('MainMap.SemiZKeyControl', 11)
+    SemiSlashControl = MainMap_SemiSlashControl('MainMap.SemiSlashControl', 12)
+    ZKeyControl = MainMap_ZKeyControl('MainMap.ZKeyControl', 13)
+    SlashControl = MainMap_SlashControl('MainMap.SlashControl', 14)
     Default = MainMap_Default('MainMap.Default', -1)
 
 class Turnstile_sm(statemap.FSMContext):
