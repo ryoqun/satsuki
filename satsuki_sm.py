@@ -202,7 +202,15 @@ class MainMap_NestedSpace(MainMap_Default):
                 fsm.setState(endState)
 
 
-class MainMap_PostZKeyControl(MainMap_Default):
+class MainMap_NestedZKeyControl(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(False)
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
@@ -581,7 +589,7 @@ class MainMap_ZKeyControl(MainMap_Default):
             fsm.getState().Exit(fsm)
             # No actions.
             pass
-            fsm.setState(MainMap.PostZKeyControl)
+            fsm.setState(MainMap.NestedZKeyControl)
             fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
@@ -645,7 +653,7 @@ class MainMap(object):
     Tenkey = MainMap_Tenkey('MainMap.Tenkey', 2)
     PostSpace = MainMap_PostSpace('MainMap.PostSpace', 3)
     NestedSpace = MainMap_NestedSpace('MainMap.NestedSpace', 4)
-    PostZKeyControl = MainMap_PostZKeyControl('MainMap.PostZKeyControl', 5)
+    NestedZKeyControl = MainMap_NestedZKeyControl('MainMap.NestedZKeyControl', 5)
     PostSlashControl = MainMap_PostSlashControl('MainMap.PostSlashControl', 6)
     PreSpace = MainMap_PreSpace('MainMap.PreSpace', 7)
     Space = MainMap_Space('MainMap.Space', 8)

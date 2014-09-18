@@ -89,7 +89,10 @@ NestedSpace
     { emit(event); }
 }
 
-PostZKeyControl {
+NestedZKeyControl
+  Entry { control_mode(True); }
+  Exit { control_mode(False); }
+{
   keyup(event: KeyEvent) [ event.is_z ]
     pop
     { pop_state(); }
@@ -269,7 +272,7 @@ ZKeyControl
     {}
 
   keyup(event: KeyEvent) [ event.is_space ]
-    PostZKeyControl
+    NestedZKeyControl
     {}
 
   keyup(event: KeyEvent)
