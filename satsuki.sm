@@ -101,12 +101,19 @@ NestedZKeyControl
     nil
     { emit(event); }
 
+  keydown(event: KeyEvent) [ event.is_z ]
+    nil
+    { }
+
   keydown(event: KeyEvent)
     nil
     { emit(event); }
 }
 
-PostSlashControl {
+NestedSlashControl
+  Entry { control_mode(True); }
+  Exit { control_mode(False); }
+{
   keyup(event: KeyEvent) [ event.is_slash ]
     pop
     { pop_state(); }
@@ -114,6 +121,10 @@ PostSlashControl {
   keyup(event: KeyEvent)
     nil
     { emit(event); }
+
+  keydown(event: KeyEvent) [ event.is_slash ]
+    nil
+    { }
 
   keydown(event: KeyEvent)
     nil
@@ -203,6 +214,10 @@ PreZKeyControl {
   keyup(event: KeyEvent) [ event.is_z ]
     pop
     { emit_z(); }
+
+  keyup(event: KeyEvent) [ event.is_space ]
+    NestedZKeyControl
+    { emit_slash(); }
 }
 
 PreSlashControl {
@@ -220,6 +235,10 @@ PreSlashControl {
 
   keyup(event: KeyEvent) [ event.is_slash ]
     pop
+    { emit_slash(); }
+
+  keyup(event: KeyEvent) [ event.is_space ]
+    NestedSlashControl
     { emit_slash(); }
 }
 
@@ -297,7 +316,7 @@ SlashControl
     {}
 
   keyup(event: KeyEvent) [ event.is_space ]
-    PostSlashControl
+    NestedSlashControl
     {}
 
   keyup(event: KeyEvent)

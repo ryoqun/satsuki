@@ -214,12 +214,17 @@ class MainMap_NestedZKeyControl(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        endState = fsm.getState()
-        fsm.clearState()
-        try:
-            ctxt.emit(event)
-        finally:
-            fsm.setState(endState)
+        if  event.is_z  :
+            # No actions.
+            pass
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
@@ -239,16 +244,29 @@ class MainMap_NestedZKeyControl(MainMap_Default):
                 fsm.setState(endState)
 
 
-class MainMap_PostSlashControl(MainMap_Default):
+class MainMap_NestedSlashControl(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.control_mode(False)
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        endState = fsm.getState()
-        fsm.clearState()
-        try:
-            ctxt.emit(event)
-        finally:
-            fsm.setState(endState)
+        if  event.is_slash  :
+            # No actions.
+            pass
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()
@@ -432,6 +450,14 @@ class MainMap_PreZKeyControl(MainMap_Default):
                 ctxt.emit_z()
             finally:
                 fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_slash()
+            finally:
+                fsm.setState(MainMap.NestedZKeyControl)
+                fsm.getState().Entry(fsm)
         else:
             MainMap_Default.keyup(self, fsm, event)
         
@@ -472,6 +498,14 @@ class MainMap_PreSlashControl(MainMap_Default):
                 ctxt.emit_slash()
             finally:
                 fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_slash()
+            finally:
+                fsm.setState(MainMap.NestedSlashControl)
+                fsm.getState().Entry(fsm)
         else:
             MainMap_Default.keyup(self, fsm, event)
         
@@ -635,7 +669,7 @@ class MainMap_SlashControl(MainMap_Default):
             fsm.getState().Exit(fsm)
             # No actions.
             pass
-            fsm.setState(MainMap.PostSlashControl)
+            fsm.setState(MainMap.NestedSlashControl)
             fsm.getState().Entry(fsm)
         else:
             endState = fsm.getState()
@@ -654,7 +688,7 @@ class MainMap(object):
     PostSpace = MainMap_PostSpace('MainMap.PostSpace', 3)
     NestedSpace = MainMap_NestedSpace('MainMap.NestedSpace', 4)
     NestedZKeyControl = MainMap_NestedZKeyControl('MainMap.NestedZKeyControl', 5)
-    PostSlashControl = MainMap_PostSlashControl('MainMap.PostSlashControl', 6)
+    NestedSlashControl = MainMap_NestedSlashControl('MainMap.NestedSlashControl', 6)
     PreSpace = MainMap_PreSpace('MainMap.PreSpace', 7)
     Space = MainMap_Space('MainMap.Space', 8)
     PreZKeyControl = MainMap_PreZKeyControl('MainMap.PreZKeyControl', 9)
