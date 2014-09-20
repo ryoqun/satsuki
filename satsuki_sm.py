@@ -534,6 +534,12 @@ class MainMap_SemiZKeyControl(MainMap_Default):
                 ctxt.emit(event)
             finally:
                 fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.NestedZKeyControl)
+            fsm.getState().Entry(fsm)
         else:
             fsm.getState().Exit(fsm)
             fsm.clearState()
@@ -571,6 +577,12 @@ class MainMap_SemiSlashControl(MainMap_Default):
                 ctxt.emit(event)
             finally:
                 fsm.popState()
+        elif  event.is_space  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.NestedSlashControl)
+            fsm.getState().Entry(fsm)
         else:
             fsm.getState().Exit(fsm)
             fsm.clearState()

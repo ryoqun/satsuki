@@ -251,6 +251,10 @@ SemiZKeyControl {
     pop
     { emit_z(); flush(); emit(event); }
 
+  keyup(event: KeyEvent) [ event.is_space ]
+    NestedZKeyControl
+    {}
+
   keyup(event: KeyEvent)
     ZKeyControl
     { control_mode(True); flush(); emit(event); }
@@ -264,6 +268,10 @@ SemiSlashControl {
   keyup(event: KeyEvent) [ event.is_slash ]
     pop
     { emit_slash(); flush(); emit(event); }
+
+  keyup(event: KeyEvent) [ event.is_space ]
+    NestedSlashControl
+    {}
 
   keyup(event: KeyEvent)
     SlashControl
