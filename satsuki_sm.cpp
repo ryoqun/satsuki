@@ -16,14 +16,18 @@ namespace Turnstile
     MainMap_Normal MainMap::Normal("MainMap::Normal", 0);
     MainMap_Shift MainMap::Shift("MainMap::Shift", 1);
     MainMap_Tenkey MainMap::Tenkey("MainMap::Tenkey", 2);
-    MainMap_PreSpace MainMap::PreSpace("MainMap::PreSpace", 3);
-    MainMap_Space MainMap::Space("MainMap::Space", 4);
-    MainMap_PreZKeyControl MainMap::PreZKeyControl("MainMap::PreZKeyControl", 5);
-    MainMap_PreSlashControl MainMap::PreSlashControl("MainMap::PreSlashControl", 6);
-    MainMap_SemiZKeyControl MainMap::SemiZKeyControl("MainMap::SemiZKeyControl", 7);
-    MainMap_SemiSlashControl MainMap::SemiSlashControl("MainMap::SemiSlashControl", 8);
-    MainMap_ZKeyControl MainMap::ZKeyControl("MainMap::ZKeyControl", 9);
-    MainMap_SlashControl MainMap::SlashControl("MainMap::SlashControl", 10);
+    MainMap_PostSpace MainMap::PostSpace("MainMap::PostSpace", 3);
+    MainMap_NestedSpace MainMap::NestedSpace("MainMap::NestedSpace", 4);
+    MainMap_NestedZKeyControl MainMap::NestedZKeyControl("MainMap::NestedZKeyControl", 5);
+    MainMap_NestedSlashControl MainMap::NestedSlashControl("MainMap::NestedSlashControl", 6);
+    MainMap_PreSpace MainMap::PreSpace("MainMap::PreSpace", 7);
+    MainMap_Space MainMap::Space("MainMap::Space", 8);
+    MainMap_PreZKeyControl MainMap::PreZKeyControl("MainMap::PreZKeyControl", 9);
+    MainMap_PreSlashControl MainMap::PreSlashControl("MainMap::PreSlashControl", 10);
+    MainMap_SemiZKeyControl MainMap::SemiZKeyControl("MainMap::SemiZKeyControl", 11);
+    MainMap_SemiSlashControl MainMap::SemiSlashControl("MainMap::SemiSlashControl", 12);
+    MainMap_ZKeyControl MainMap::ZKeyControl("MainMap::ZKeyControl", 13);
+    MainMap_SlashControl MainMap::SlashControl("MainMap::SlashControl", 14);
 
     void TurnstileState::keydown(satsukiContext& context, KeyEvent event)
     {
@@ -243,6 +247,314 @@ namespace Turnstile
         return;
     }
 
+    void MainMap_PostSpace::keydown(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        TurnstileState& endState = context.getState();
+
+        context.clearState();
+        try
+        {
+            ctxt.emit(event);
+            context.setState(endState);
+        }
+        catch (...)
+        {
+            context.setState(endState);
+            throw;
+        }
+
+        return;
+    }
+
+    void MainMap_PostSpace::keyup(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_space )
+        {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.pop_state();
+                context.popState();
+            }
+            catch (...)
+            {
+                context.popState();
+                throw;
+            }
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
+    void MainMap_NestedSpace::Entry(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.space_mode(True);
+        return;
+    }
+
+    void MainMap_NestedSpace::Exit(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.space_mode(False);
+        return;
+    }
+
+    void MainMap_NestedSpace::keydown(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        TurnstileState& endState = context.getState();
+
+        context.clearState();
+        try
+        {
+            ctxt.emit(event);
+            context.setState(endState);
+        }
+        catch (...)
+        {
+            context.setState(endState);
+            throw;
+        }
+
+        return;
+    }
+
+    void MainMap_NestedSpace::keyup(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_space )
+        {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.pop_state();
+                context.popState();
+            }
+            catch (...)
+            {
+                context.popState();
+                throw;
+            }
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
+    void MainMap_NestedZKeyControl::Entry(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.control_mode(True);
+        return;
+    }
+
+    void MainMap_NestedZKeyControl::Exit(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.control_mode(False);
+        return;
+    }
+
+    void MainMap_NestedZKeyControl::keydown(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_z )
+        {
+            // No actions.
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
+    void MainMap_NestedZKeyControl::keyup(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_z )
+        {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.pop_state();
+                context.popState();
+            }
+            catch (...)
+            {
+                context.popState();
+                throw;
+            }
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
+    void MainMap_NestedSlashControl::Entry(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.control_mode(True);
+        return;
+    }
+
+    void MainMap_NestedSlashControl::Exit(satsukiContext& context)
+
+{
+        Turnstile& ctxt = context.getOwner();
+
+        ctxt.control_mode(False);
+        return;
+    }
+
+    void MainMap_NestedSlashControl::keydown(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_slash )
+        {
+            // No actions.
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
+    void MainMap_NestedSlashControl::keyup(satsukiContext& context, KeyEvent event)
+    {
+        Turnstile& ctxt = context.getOwner();
+
+        if ( event.is_slash )
+        {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.pop_state();
+                context.popState();
+            }
+            catch (...)
+            {
+                context.popState();
+                throw;
+            }
+        }
+        else
+        {
+            TurnstileState& endState = context.getState();
+
+            context.clearState();
+            try
+            {
+                ctxt.emit(event);
+                context.setState(endState);
+            }
+            catch (...)
+            {
+                context.setState(endState);
+                throw;
+            }
+        }
+
+        return;
+    }
+
     void MainMap_PreSpace::keydown(satsukiContext& context, KeyEvent event)
     {
         Turnstile& ctxt = context.getOwner();
@@ -316,7 +628,40 @@ namespace Turnstile
                 throw;
             }
         }
-        else
+        else if ( event.is_slash )
+    
+    {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.emit_slash();
+                context.setState(MainMap::PostSpace);
+            }
+            catch (...)
+            {
+                context.setState(MainMap::PostSpace);
+                throw;
+            }
+            (context.getState()).Entry(context);
+        }
+        else if ( event.is_z )
+    
+    {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.emit_z();
+                context.setState(MainMap::PostSpace);
+            }
+            catch (...)
+            {
+                context.setState(MainMap::PostSpace);
+                throw;
+            }
+            (context.getState()).Entry(context);
+        }        else
         {
              MainMap_Default::keyup(context, event);
         }
@@ -393,6 +738,22 @@ namespace Turnstile
             (context.getState()).Exit(context);
             // No actions.
             context.popState();
+        }
+        else if ( event.is_slash )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedSpace);
+            (context.getState()).Entry(context);
+        }
+        else if ( event.is_z )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedSpace);
+            (context.getState()).Entry(context);
         }
         else
         {
@@ -475,7 +836,23 @@ namespace Turnstile
                 throw;
             }
         }
-        else
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.emit_slash();
+                context.setState(MainMap::NestedZKeyControl);
+            }
+            catch (...)
+            {
+                context.setState(MainMap::NestedZKeyControl);
+                throw;
+            }
+            (context.getState()).Entry(context);
+        }        else
         {
              MainMap_Default::keyup(context, event);
         }
@@ -544,7 +921,23 @@ namespace Turnstile
                 throw;
             }
         }
-        else
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            context.clearState();
+            try
+            {
+                ctxt.emit_slash();
+                context.setState(MainMap::NestedSlashControl);
+            }
+            catch (...)
+            {
+                context.setState(MainMap::NestedSlashControl);
+                throw;
+            }
+            (context.getState()).Entry(context);
+        }        else
         {
              MainMap_Default::keyup(context, event);
         }
@@ -595,6 +988,14 @@ namespace Turnstile
                 context.popState();
                 throw;
             }
+        }
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedZKeyControl);
+            (context.getState()).Entry(context);
         }
         else
         {
@@ -662,6 +1063,14 @@ namespace Turnstile
                 throw;
             }
         }
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedSlashControl);
+            (context.getState()).Entry(context);
+        }
         else
         {
             (context.getState()).Exit(context);
@@ -710,6 +1119,13 @@ namespace Turnstile
         {
             // No actions.
         }
+        else if ( event.is_space )
+    
+    {
+            // No actions.
+            context.pushState(MainMap::PreSpace);
+            (context.getState()).Entry(context);
+        }
         else
         {
             TurnstileState& endState = context.getState();
@@ -739,6 +1155,14 @@ namespace Turnstile
             (context.getState()).Exit(context);
             // No actions.
             context.popState();
+        }
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedZKeyControl);
+            (context.getState()).Entry(context);
         }
         else
         {
@@ -815,6 +1239,14 @@ namespace Turnstile
             (context.getState()).Exit(context);
             // No actions.
             context.popState();
+        }
+        else if ( event.is_space )
+    
+    {
+            (context.getState()).Exit(context);
+            // No actions.
+            context.setState(MainMap::NestedSlashControl);
+            (context.getState()).Entry(context);
         }
         else
         {

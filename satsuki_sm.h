@@ -20,6 +20,10 @@ namespace Turnstile
     class MainMap_Normal;
     class MainMap_Shift;
     class MainMap_Tenkey;
+    class MainMap_PostSpace;
+    class MainMap_NestedSpace;
+    class MainMap_NestedZKeyControl;
+    class MainMap_NestedSlashControl;
     class MainMap_PreSpace;
     class MainMap_Space;
     class MainMap_PreZKeyControl;
@@ -60,6 +64,10 @@ namespace Turnstile
         static MainMap_Normal Normal;
         static MainMap_Shift Shift;
         static MainMap_Tenkey Tenkey;
+        static MainMap_PostSpace PostSpace;
+        static MainMap_NestedSpace NestedSpace;
+        static MainMap_NestedZKeyControl NestedZKeyControl;
+        static MainMap_NestedSlashControl NestedSlashControl;
         static MainMap_PreSpace PreSpace;
         static MainMap_Space Space;
         static MainMap_PreZKeyControl PreZKeyControl;
@@ -111,6 +119,60 @@ namespace Turnstile
     {
     public:
         MainMap_Tenkey(const char *name, int stateId)
+        : MainMap_Default(name, stateId)
+        {};
+
+        void Entry(satsukiContext&);
+        void Exit(satsukiContext&);
+        void keydown(satsukiContext& context, KeyEvent event);
+        void keyup(satsukiContext& context, KeyEvent event);
+    };
+
+    class MainMap_PostSpace :
+        public MainMap_Default
+    {
+    public:
+        MainMap_PostSpace(const char *name, int stateId)
+        : MainMap_Default(name, stateId)
+        {};
+
+        void keydown(satsukiContext& context, KeyEvent event);
+        void keyup(satsukiContext& context, KeyEvent event);
+    };
+
+    class MainMap_NestedSpace :
+        public MainMap_Default
+    {
+    public:
+        MainMap_NestedSpace(const char *name, int stateId)
+        : MainMap_Default(name, stateId)
+        {};
+
+        void Entry(satsukiContext&);
+        void Exit(satsukiContext&);
+        void keydown(satsukiContext& context, KeyEvent event);
+        void keyup(satsukiContext& context, KeyEvent event);
+    };
+
+    class MainMap_NestedZKeyControl :
+        public MainMap_Default
+    {
+    public:
+        MainMap_NestedZKeyControl(const char *name, int stateId)
+        : MainMap_Default(name, stateId)
+        {};
+
+        void Entry(satsukiContext&);
+        void Exit(satsukiContext&);
+        void keydown(satsukiContext& context, KeyEvent event);
+        void keyup(satsukiContext& context, KeyEvent event);
+    };
+
+    class MainMap_NestedSlashControl :
+        public MainMap_Default
+    {
+    public:
+        MainMap_NestedSlashControl(const char *name, int stateId)
         : MainMap_Default(name, stateId)
         {};
 
