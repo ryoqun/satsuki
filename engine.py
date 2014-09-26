@@ -145,16 +145,16 @@ class Engine(ibus.EngineBase):
     self.do_emit(event)
 
   def emit_space(self):
-    self.do_emit(KeyDown(keysyms.space, 57, 0))
-    self.do_emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
+    self.emit(KeyDown(keysyms.space, 57, 0))
+    self.emit(KeyUp(keysyms.space, 57, modifier.RELEASE_MASK))
 
   def emit_z(self):
-    self.do_emit(KeyDown(keysyms.z, 44, 0))
-    self.do_emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
+    self.emit(KeyDown(keysyms.z, 44, 0))
+    self.emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
 
   def emit_slash(self):
-    self.do_emit(KeyDown(keysyms.slash, 53, 0))
-    self.do_emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
+    self.emit(KeyDown(keysyms.slash, 53, 0))
+    self.emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
 
   def pop_state(self):
     #print("aaaa")
@@ -181,6 +181,7 @@ class Engine(ibus.EngineBase):
     self.__forward_key_event(event.keyval, event.keycode, event.state)
 
   def space_mode(self, flag):
+    print("spacd moe !!!!!!!i" + str(flag))
     self.__space_mode = flag
 
   def control_mode(self, flag):
