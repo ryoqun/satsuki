@@ -117,24 +117,23 @@ class Engine(ibus.EngineBase):
     self.__shift_mode = False
 
   def emit(self, event):
-    #print self.__state.getState()
-    #print event
-    #print "space: " + str(self.__space_mode) + ", tenkey: " + str(self.__tenkey_mode) + ", shift: " + str(self.__shift_mode) + ", control: " + str(self.__control_mode)
+    if self.__shift_mode and not self.__space_mode and not self.__tenkey_mode:
+      event.keyval = ord(chr(event.keyval).upper())
+      event.state = event.state | 1
+
     if self.__space_mode:
-      if chr(event.keyval) in self.__space_mode_map:
+      if event.keyval < 256 and chr(event.keyval) in self.__space_mode_map:
         result = self.__space_mode_map[chr(event.keyval)]
         event.keyval = result[0]
         event.keycode = result[1]
 
     if self.__tenkey_mode:
-      if chr(event.keyval) in self.__tenkey_mode_map:
+      print("aaaaaaa");
+      if event.keyval < 256 and chr(event.keyval) in self.__tenkey_mode_map:
+        print("aaa");
         result = self.__tenkey_mode_map[chr(event.keyval)]
         event.keyval = result[0]
         event.keycode = result[1]
-
-    if self.__shift_mode:
-      event.keyval = ord(chr(event.keyval).upper())
-      event.state = event.state | 1
 
     if self.__control_mode:
       event.state = event.state | modifier.CONTROL_MASK
@@ -157,9 +156,7 @@ class Engine(ibus.EngineBase):
     self.emit(KeyUp(keysyms.slash, 53, modifier.RELEASE_MASK))
 
   def pop_state(self):
-    #print("aaaa")
     self.__state.state_exit()
-    #print("bbb")
     self.__state.popState()
 
   def emit_control_down(self):
