@@ -78,12 +78,24 @@ class MainMap_Shift(MainMap_Default):
 
     def keydown(self, fsm, event):
         ctxt = fsm.getOwner()
-        endState = fsm.getState()
-        fsm.clearState()
-        try:
-            ctxt.emit(event)
-        finally:
-            fsm.setState(endState)
+        if  event.is_space  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.PreSpace)
+            fsm.getState().Entry(fsm)
+        elif  event.is_tenkey  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.Tenkey)
+            fsm.getState().Entry(fsm)
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
 
     def keyup(self, fsm, event):
         ctxt = fsm.getOwner()

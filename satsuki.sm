@@ -32,6 +32,12 @@ Shift
   Entry { shift_mode(True); }
   Exit { shift_mode(False); }
 {
+  keydown(event: KeyEvent) [ event.is_space ]
+    push(PreSpace)
+    {}
+  keydown(event: KeyEvent) [ event.is_tenkey ]
+    push(Tenkey)
+    {}
   keydown(event: KeyEvent)
     nil
     { emit(event); }
