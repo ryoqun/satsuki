@@ -47,6 +47,11 @@ class MainMap_Normal(MainMap_Default):
             pass
             fsm.pushState(MainMap.PreZKeyControl)
             fsm.getState().Entry(fsm)
+        elif  event.is_period  :
+            # No actions.
+            pass
+            fsm.pushState(MainMap.PreRightMeta)
+            fsm.getState().Entry(fsm)
         elif  event.is_shift  :
             # No actions.
             pass
@@ -425,6 +430,38 @@ class MainMap_Space(MainMap_Default):
                 fsm.setState(endState)
 
 
+class MainMap_PreRightMeta(MainMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_period  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.setState(MainMap.RightMeta)
+            fsm.getState().Entry(fsm)
+        else:
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.buffer(event)
+            finally:
+                fsm.setState(MainMap.SemiRightMeta)
+                fsm.getState().Entry(fsm)
+
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_period  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_period()
+            finally:
+                fsm.popState()
+        else:
+            MainMap_Default.keyup(self, fsm, event)
+        
 class MainMap_PreZKeyControl(MainMap_Default):
 
     def keydown(self, fsm, event):
@@ -521,6 +558,43 @@ class MainMap_PreSlashControl(MainMap_Default):
         else:
             MainMap_Default.keyup(self, fsm, event)
         
+class MainMap_SemiRightMeta(MainMap_Default):
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        fsm.getState().Exit(fsm)
+        fsm.clearState()
+        try:
+            ctxt.meta_mode(True)
+            ctxt.flush()
+            ctxt.emit(event)
+        finally:
+            fsm.setState(MainMap.RightMeta)
+            fsm.getState().Entry(fsm)
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_period  :
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit_period()
+                ctxt.flush()
+                ctxt.emit(event)
+            finally:
+                fsm.popState()
+        else:
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.meta_mode(True)
+                ctxt.flush()
+                ctxt.emit(event)
+            finally:
+                fsm.setState(MainMap.RightMeta)
+                fsm.getState().Entry(fsm)
+
+
 class MainMap_SemiZKeyControl(MainMap_Default):
 
     def keydown(self, fsm, event):
@@ -605,6 +679,46 @@ class MainMap_SemiSlashControl(MainMap_Default):
             finally:
                 fsm.setState(MainMap.SlashControl)
                 fsm.getState().Entry(fsm)
+
+
+class MainMap_RightMeta(MainMap_Default):
+
+    def Entry(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.meta_mode(True)
+
+    def Exit(self, fsm):
+        ctxt = fsm.getOwner()
+        ctxt.meta_mode(False)
+
+    def keydown(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_period  :
+            # No actions.
+            pass
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        if  event.is_period  :
+            fsm.getState().Exit(fsm)
+            # No actions.
+            pass
+            fsm.popState()
+        else:
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
 
 
 class MainMap_ZKeyControl(MainMap_Default):
@@ -715,12 +829,15 @@ class MainMap(object):
     NestedSlashControl = MainMap_NestedSlashControl('MainMap.NestedSlashControl', 6)
     PreSpace = MainMap_PreSpace('MainMap.PreSpace', 7)
     Space = MainMap_Space('MainMap.Space', 8)
-    PreZKeyControl = MainMap_PreZKeyControl('MainMap.PreZKeyControl', 9)
-    PreSlashControl = MainMap_PreSlashControl('MainMap.PreSlashControl', 10)
-    SemiZKeyControl = MainMap_SemiZKeyControl('MainMap.SemiZKeyControl', 11)
-    SemiSlashControl = MainMap_SemiSlashControl('MainMap.SemiSlashControl', 12)
-    ZKeyControl = MainMap_ZKeyControl('MainMap.ZKeyControl', 13)
-    SlashControl = MainMap_SlashControl('MainMap.SlashControl', 14)
+    PreRightMeta = MainMap_PreRightMeta('MainMap.PreRightMeta', 9)
+    PreZKeyControl = MainMap_PreZKeyControl('MainMap.PreZKeyControl', 10)
+    PreSlashControl = MainMap_PreSlashControl('MainMap.PreSlashControl', 11)
+    SemiRightMeta = MainMap_SemiRightMeta('MainMap.SemiRightMeta', 12)
+    SemiZKeyControl = MainMap_SemiZKeyControl('MainMap.SemiZKeyControl', 13)
+    SemiSlashControl = MainMap_SemiSlashControl('MainMap.SemiSlashControl', 14)
+    RightMeta = MainMap_RightMeta('MainMap.RightMeta', 15)
+    ZKeyControl = MainMap_ZKeyControl('MainMap.ZKeyControl', 16)
+    SlashControl = MainMap_SlashControl('MainMap.SlashControl', 17)
     Default = MainMap_Default('MainMap.Default', -1)
 
 class Turnstile_sm(statemap.FSMContext):

@@ -17,6 +17,9 @@ Normal
   keydown(event: KeyEvent) [ event.is_z ]
     push(PreZKeyControl)
     {}
+  keydown(event: KeyEvent) [ event.is_period ]
+    push(PreRightMeta)
+    {}
   keydown(event: KeyEvent) [ event.is_shift ]
     push(Shift)
     {}
@@ -204,6 +207,20 @@ Space
     { emit(event); }
 }
 
+PreRightMeta {
+  keydown(event: KeyEvent) [ event.is_period ]
+    RightMeta
+    {}
+
+  keydown(event: KeyEvent)
+    SemiRightMeta
+    { buffer(event);}
+
+  keyup(event: KeyEvent) [ event.is_period ]
+    pop
+    { emit_period(); }
+}
+
 PreZKeyControl {
   keydown(event: KeyEvent) [ event.is_z ]
     ZKeyControl
@@ -248,6 +265,20 @@ PreSlashControl {
     { emit_slash(); }
 }
 
+SemiRightMeta {
+  keydown(event: KeyEvent)
+    RightMeta
+    { meta_mode(True); flush(); emit(event); }
+
+  keyup(event: KeyEvent) [ event.is_period ]
+    pop
+    { emit_period(); flush(); emit(event); }
+
+  keyup(event: KeyEvent)
+    RightMeta
+    { meta_mode(True); flush(); emit(event); }
+}
+
 SemiZKeyControl {
   keydown(event: KeyEvent)
     ZKeyControl
@@ -282,6 +313,27 @@ SemiSlashControl {
   keyup(event: KeyEvent)
     SlashControl
     { control_mode(True); flush(); emit(event); }
+}
+
+RightMeta
+  Entry { meta_mode(True); }
+  Exit { meta_mode(False); }
+{
+  keydown(event: KeyEvent) [ event.is_period ]
+    nil
+    {}
+
+  keydown(event: KeyEvent)
+    nil
+    { emit(event); }
+
+  keyup(event: KeyEvent) [ event.is_period ]
+    pop
+    {}
+
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
 }
 
 ZKeyControl

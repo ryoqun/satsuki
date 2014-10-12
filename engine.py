@@ -11,7 +11,7 @@ class KeyEvent:
     self.keyval = keyval
     self.keycode = keycode
     self.state = state
-    self.is_space = self.is_slash = self.is_z = self.is_tenkey = self.is_shift = False
+    self.is_space = self.is_slash = self.is_period = self.is_z = self.is_tenkey = self.is_shift = False
     if self.keyval == keysyms.space:
       self.name = "space"
       self.is_space = True
@@ -21,6 +21,9 @@ class KeyEvent:
     elif self.keyval == keysyms.z:
       self.name = "z"
       self.is_z = True
+    elif self.keyval == keysyms.period:
+      self.name = "slash"
+      self.is_period = True
     elif keyval == 65315 or keyval == 65329:
       self.name = "shift"
       self.is_shift = True
@@ -113,6 +116,7 @@ class Engine(ibus.EngineBase):
     self.__buffer = None
     self.__space_mode = False
     self.__control_mode = False
+    self.__meta_mode = False
     self.__tenkey_mode = False
     self.__shift_mode = False
 
@@ -135,7 +139,7 @@ class Engine(ibus.EngineBase):
         event.keyval = result[0]
         event.keycode = result[1]
 
-    if self.__control_mode:
+    if self.__control_mode or self.__meta_mode:
       event.state = event.state | modifier.CONTROL_MASK
 
     if not self.__is_pressed(event.state):
@@ -150,6 +154,10 @@ class Engine(ibus.EngineBase):
   def emit_z(self):
     self.emit(KeyDown(keysyms.z, 44, 0))
     self.emit(KeyUp(keysyms.z, 44, modifier.RELEASE_MASK))
+
+  def emit_period(self):
+    self.emit(KeyDown(keysyms.period, 52, 0))
+    self.emit(KeyUp(keysyms.period, 52, modifier.RELEASE_MASK))
 
   def emit_slash(self):
     self.emit(KeyDown(keysyms.slash, 53, 0))
@@ -183,6 +191,9 @@ class Engine(ibus.EngineBase):
 
   def control_mode(self, flag):
     self.__control_mode = flag
+
+  def meta_mode(self, flag):
+    self.__meta_mode = flag
 
   def shift_mode(self, flag):
     self.__shift_mode = flag
