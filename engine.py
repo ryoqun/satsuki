@@ -8,6 +8,7 @@ import satsuki_sm
 
 class KeyEvent:
   def __init__(self, keyval, keycode, state):
+    print keyval
     self.keyval = keyval
     self.keycode = keycode
     self.state = state
@@ -24,10 +25,10 @@ class KeyEvent:
     elif self.keyval == keysyms.period:
       self.name = "slash"
       self.is_period = True
-    elif keyval == 65315 or keyval == 65329:
+    elif keyval == 65315 or keyval == 65329 or keyval == 65516:
       self.name = "shift"
       self.is_shift = True
-    elif keyval == 65314 or keyval == 65332:
+    elif keyval == 65314 or keyval == 65332 or keyval == 65515:
       self.name = "tenkey"
       self.is_tenkey = True
     else:
@@ -183,6 +184,7 @@ class Engine(ibus.EngineBase):
 
   def do_emit(self, event):
     #print "name: " + str(event.name) + " keyval: " + str(event.keyval) + " keycode: " + str(event.keycode) + " state: " + str(event.state)
+    print event
     self.__forward_key_event(event.keyval, event.keycode, event.state)
 
   def space_mode(self, flag):
