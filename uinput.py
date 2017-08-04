@@ -4,7 +4,7 @@ import satsuki_sm
 
 class KeyEvent:
   def __init__(self, event):
-    #print event
+    #print(event)
     self.event = event
     self.is_space = self.is_slash = self.is_period = self.is_z = self.is_tenkey = self.is_shift = False
     if self.event.scancode == ecodes.KEY_SPACE:
@@ -27,7 +27,7 @@ class KeyEvent:
     #  self.is_tenkey = True
     else:
       self.name = "none"
-    print self.name
+    #print(self.name)
 
 class KeyDown(KeyEvent):
   pass
@@ -45,13 +45,40 @@ class StateMachine(satsuki_sm.Turnstile_sm):
     return self._state_stack[-1]
 
 class K:
+  __space_mode_map = {
+    ecodes.KEY_Q: [ecodes.KEY_1, True],
+    ecodes.KEY_W: [ecodes.KEY_2, True],
+    ecodes.KEY_E: [ecodes.KEY_3, True],
+    ecodes.KEY_R: [ecodes.KEY_4, True],
+    ecodes.KEY_T: [ecodes.KEY_5, True],
+    ecodes.KEY_Y: [ecodes.KEY_6, True],
+    ecodes.KEY_U: [ecodes.KEY_7, True],
+    ecodes.KEY_I: [ecodes.KEY_8, True],
+    ecodes.KEY_O: [ecodes.KEY_9, True],
+    ecodes.KEY_P: [ecodes.KEY_0, True],
+    ecodes.KEY_SEMICOLON: [ecodes.KEY_SEMICOLON, True],
+  }
+
   def __init__(self):
     self.sink = UInput()
     self.reset_state()
 
   def emit(self, event):
-    self.sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
-    self.sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
+    if self.__space_mode:
+      translated_event = self.__space_mode_map[event.event.scancode]
+      if translated_event[1]:
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+      else:
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+    else:
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 1)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 0)
+
     self.sink.syn()
 
   def emit_space(self):
@@ -68,7 +95,7 @@ class K:
     self.__shift_mode = False
 
   def space_mode(self, flag):
-    print("spacd moe !!!!!!!i" + str(flag))
+    print("space mode !!!!!!!i" + str(flag))
     self.__space_mode = flag
 
   def control_mode(self, flag):
@@ -93,17 +120,13 @@ print(source)
 for event in source.read_loop():
   if event.type == ecodes.EV_KEY:
     key_event = categorize(event)
-    print key_event
-    print key_event.keystate
+    print(key_event)
+    print(key_event.keystate)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
     #sink.syn()
     print(state.state_list())
-    try:
-      if key_event.keystate == events.KeyEvent.key_down:
-        state.keydown(KeyDown(key_event))
-      if key_event.keystate == events.KeyEvent.key_up:
-        state.keyup(KeyUp(key_event))
-    except Exception as exception:
-      print "exception is caught"
-      print exception
+    if key_event.keystate == events.KeyEvent.key_down:
+      state.keydown(KeyDown(key_event))
+    if key_event.keystate == events.KeyEvent.key_up:
+      state.keyup(KeyUp(key_event))
