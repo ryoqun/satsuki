@@ -218,6 +218,7 @@ class Engine(ibus.EngineBase):
       print
 
     except Exception as exception:
+      print "exception is caught"
       print exception
 
     return True
