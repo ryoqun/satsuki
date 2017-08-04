@@ -29,6 +29,9 @@ Normal
   keydown(event: KeyEvent)
     nil
     { emit(event); }
+  keyup(event: KeyEvent)
+    nil
+    { emit(event); }
 }
 
 Shift

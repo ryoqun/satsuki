@@ -23,7 +23,7 @@ class TurnstileState(statemap.State):
     def Default(self, fsm):
         msg = "\n\tState: %s\n\tTransition: %s" % (
             fsm.getState().getName(), fsm.getTransition())
-        raise statemap.TransitionUndefinedException, msg
+        raise statemap.TransitionUndefinedException(msg)
 
 class MainMap_Default(TurnstileState):
     pass
@@ -70,6 +70,15 @@ class MainMap_Normal(MainMap_Default):
             finally:
                 fsm.setState(endState)
 
+
+    def keyup(self, fsm, event):
+        ctxt = fsm.getOwner()
+        endState = fsm.getState()
+        fsm.clearState()
+        try:
+            ctxt.emit(event)
+        finally:
+            fsm.setState(endState)
 
 class MainMap_Shift(MainMap_Default):
 
