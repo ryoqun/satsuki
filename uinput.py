@@ -59,8 +59,10 @@ print(source)
 
 for event in source.read_loop():
   if event.type == ecodes.EV_KEY:
-    print(categorize(event))
+    key_event = categorize(event)
+    print key_event.__class__
+    print key_event.keystate
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
     #sink.syn()
-    state.keydown(KeyDown("aa"))
+    state.keydown(KeyDown(event))
