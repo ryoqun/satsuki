@@ -46,6 +46,17 @@ class StateMachine(satsuki_sm.Turnstile_sm):
 
 class K:
   __space_mode_map = {
+    ecodes.KEY_1: [ecodes.KEY_1, True],
+    ecodes.KEY_2: [ecodes.KEY_2, True],
+    ecodes.KEY_3: [ecodes.KEY_3, True],
+    ecodes.KEY_4: [ecodes.KEY_4, True],
+    ecodes.KEY_5: [ecodes.KEY_5, True],
+    ecodes.KEY_6: [ecodes.KEY_6, True],
+    ecodes.KEY_7: [ecodes.KEY_7, True],
+    ecodes.KEY_8: [ecodes.KEY_8, True],
+    ecodes.KEY_9: [ecodes.KEY_9, True],
+    ecodes.KEY_0: [ecodes.KEY_0, True],
+
     ecodes.KEY_Q: [ecodes.KEY_1, True],
     ecodes.KEY_W: [ecodes.KEY_2, True],
     ecodes.KEY_E: [ecodes.KEY_3, True],
@@ -56,6 +67,16 @@ class K:
     ecodes.KEY_I: [ecodes.KEY_8, True],
     ecodes.KEY_O: [ecodes.KEY_9, True],
     ecodes.KEY_P: [ecodes.KEY_0, True],
+
+    ecodes.KEY_A: [ecodes.KEY_MINUS, True],
+    ecodes.KEY_S: [ecodes.KEY_MINUS, False],
+    ecodes.KEY_D: [ecodes.KEY_LEFTBRACE, False],
+    ecodes.KEY_F: [ecodes.KEY_RIGHTBRACE, False],
+    ecodes.KEY_G: [ecodes.KEY_APOSTROPHE, False],
+    ecodes.KEY_H: [ecodes.KEY_APOSTROPHE, True],
+    ecodes.KEY_J: [ecodes.KEY_LEFTBRACE, True],
+    ecodes.KEY_K: [ecodes.KEY_RIGHTBRACE, True],
+    ecodes.KEY_L: [ecodes.KEY_GRAVE, True],
     ecodes.KEY_SEMICOLON: [ecodes.KEY_SEMICOLON, True],
   }
 
@@ -65,16 +86,20 @@ class K:
 
   def emit(self, event):
     if self.__space_mode:
-      translated_event = self.__space_mode_map[event.event.scancode]
-      if translated_event[1]:
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
-        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
-        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+      if event.event.scancode in self.__space_mode_map:
+        translated_event = self.__space_mode_map[event.event.scancode]
+        if translated_event[1]:
+          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+          self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+          self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+        else:
+          self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+          self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
       else:
-        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
-        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+        self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+        self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
     else:
       self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 1)
       self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 0)
@@ -95,7 +120,7 @@ class K:
     self.__shift_mode = False
 
   def space_mode(self, flag):
-    print("space mode !!!!!!!i" + str(flag))
+    #print("space mode !!!!!!!i" + str(flag))
     self.__space_mode = flag
 
   def control_mode(self, flag):
@@ -120,12 +145,12 @@ print(source)
 for event in source.read_loop():
   if event.type == ecodes.EV_KEY:
     key_event = categorize(event)
-    print(key_event)
-    print(key_event.keystate)
+    #print(key_event)
+    #print(key_event.keystate)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
     #sink.syn()
-    print(state.state_list())
+    #print(state.state_list())
     if key_event.keystate == events.KeyEvent.key_down:
       state.keydown(KeyDown(key_event))
     if key_event.keystate == events.KeyEvent.key_up:
