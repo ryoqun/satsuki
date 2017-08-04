@@ -78,6 +78,18 @@ class K:
     ecodes.KEY_K: [ecodes.KEY_RIGHTBRACE, True],
     ecodes.KEY_L: [ecodes.KEY_GRAVE, True],
     ecodes.KEY_SEMICOLON: [ecodes.KEY_SEMICOLON, True],
+
+    #ecodes.KEY_Z: used for control mode!
+    ecodes.KEY_X: [ecodes.KEY_GRAVE, False],
+    ecodes.KEY_C: [ecodes.KEY_BACKSLASH, False],
+    ecodes.KEY_V: [ecodes.KEY_EQUAL, False],
+    ecodes.KEY_B: [ecodes.KEY_BACKSLASH, True],
+
+    ecodes.KEY_N: [ecodes.KEY_EQUAL, True],
+    ecodes.KEY_M: [ecodes.KEY_SPACE, False],
+    ecodes.KEY_COMMA: [ecodes.KEY_COMMA, True],
+    ecodes.KEY_DOT: [ecodes.KEY_DOT, True],
+    ecodes.KEY_SLASH: [ecodes.KEY_SLASH, True],
   }
 
   def __init__(self):
@@ -85,7 +97,7 @@ class K:
     self.reset_state()
 
   def emit(self, event):
-    if self.__space_mode:
+    if self.__space_mode and event.event.keystate == events.KeyEvent.key_down:
       if event.event.scancode in self.__space_mode_map:
         translated_event = self.__space_mode_map[event.event.scancode]
         if translated_event[1]:
@@ -101,8 +113,9 @@ class K:
         self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
         self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
     else:
-      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 1)
-      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SEMICOLON, 0)
+      if event.event.keystate == events.KeyEvent.key_down:
+        self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+        self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
 
     self.sink.syn()
 
