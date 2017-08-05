@@ -96,26 +96,32 @@ class K:
     self.sink = UInput()
     self.reset_state()
 
+  def emit_with_space_mode(self, event):
+    if event.event.scancode in self.__space_mode_map:
+      translated_event = self.__space_mode_map[event.event.scancode]
+      if translated_event[1]:
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+      else:
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+    else:
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+
+  def emit_with_normal_mode(self, event):
+    if event.event.keystate == events.KeyEvent.key_down:
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+
   def emit(self, event):
     if self.__space_mode and event.event.keystate == events.KeyEvent.key_down:
-      if event.event.scancode in self.__space_mode_map:
-        translated_event = self.__space_mode_map[event.event.scancode]
-        if translated_event[1]:
-          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
-          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
-          self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
-          self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
-          self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
-        else:
-          self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
-          self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
-      else:
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+      self.emit_with_space_mode(event)
     else:
-      if event.event.keystate == events.KeyEvent.key_down:
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+      self.emit_with_normal_mode(event)
 
     self.sink.syn()
 
