@@ -19,9 +19,9 @@ class KeyEvent:
     #elif self.event.scancode == keysyms.period:
     #  self.name = "slash"
     #  self.is_period = True
-    #elif event == 65315 or event == 65329 or event == 65516:
-    #  self.name = "shift"
-    #  self.is_shift = True
+    elif self.event.scancode == ecodes.KEY_RIGHTMETA:
+      self.name = "shift"
+      self.is_shift = True
     #elif event == 65314 or event == 65332 or event == 65515:
     #  self.name = "tenkey"
     #  self.is_tenkey = True
@@ -120,6 +120,13 @@ class K:
     self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
 
+  def emit_with_shift_mode(self, event):
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+    self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+    self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+
   def emit_with_normal_mode(self, event):
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
@@ -128,6 +135,8 @@ class K:
       self.emit_with_space_mode(event)
     if self.__control_mode and event.event.keystate == events.KeyEvent.key_down:
       self.emit_with_control_mode(event)
+    if self.__shift_mode and event.event.keystate == events.KeyEvent.key_down:
+      self.emit_with_shift_mode(event)
     else:
       self.emit_with_normal_mode(event)
 
@@ -198,7 +207,7 @@ try:
   for source_event in source.read_loop():
     if source_event.type == ecodes.EV_KEY:
       key_event = categorize(source_event)
-      #print(key_event)
+      print(key_event)
       #print(key_event.keystate)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
