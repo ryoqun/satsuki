@@ -249,6 +249,9 @@ try:
   for source_event in source.read_loop():
     if source_event.type == ecodes.EV_KEY:
       key_event = categorize(source_event)
+      if key_event.scancode == ecodes.KEY_FN:
+        print("quiting...")
+        break
       print(key_event)
       #print(key_event.keystate)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)

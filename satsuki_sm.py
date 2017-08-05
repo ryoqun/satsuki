@@ -375,8 +375,14 @@ class MainMap_PreSpace(MainMap_Default):
                 fsm.setState(MainMap.PostSpace)
                 fsm.getState().Entry(fsm)
         else:
-            MainMap_Default.keyup(self, fsm, event)
-        
+            endState = fsm.getState()
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.setState(endState)
+
+
 class MainMap_Space(MainMap_Default):
 
     def Entry(self, fsm):
