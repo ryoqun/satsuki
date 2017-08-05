@@ -114,11 +114,11 @@ class K:
       self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
 
   def emit_with_control_mode(self, event):
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 1)
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 2)
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
-        self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
-        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 1)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 2)
+    self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+    self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
 
   def emit_with_normal_mode(self, event):
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
