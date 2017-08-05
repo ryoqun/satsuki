@@ -114,13 +114,13 @@ class K:
       self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
 
   def emit_with_normal_mode(self, event):
-    if event.event.keystate == events.KeyEvent.key_down:
-      self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
-      self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+    self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
   def emit(self, event):
     if self.__space_mode and event.event.keystate == events.KeyEvent.key_down:
       self.emit_with_space_mode(event)
+    if self.__control_mode and event.event.keystate == events.KeyEvent.key_down:
+      self.emit_with_control_mode(event)
     else:
       self.emit_with_normal_mode(event)
 
@@ -144,16 +144,15 @@ class K:
   def emit_as_buffered(self, event):
     self.buffered_event = event
 
-  def emit_buffered(self, event):
-    print(event)
-    self.emit(event)
+  def emit_buffered(self):
+    self.emit(self.buffered_event)
     self.buffered_event = None
 
   def buffer(self, event):
     self.emit_as_buffered(event)
 
   def flush(self):
-    self.emit_buffered(event)
+    self.emit_buffered()
 
   def reset_state(self):
     self.__buffer = None
@@ -164,7 +163,6 @@ class K:
     self.__shift_mode = False
 
   def space_mode(self, flag):
-    #print("space mode !!!!!!!i" + str(flag))
     self.__space_mode = flag
 
   def control_mode(self, flag):
@@ -179,23 +177,29 @@ class K:
   def tenkey_mode(self, flag):
     self.__tenkey_mode = flag
 
-
-state = StateMachine(K())
+  def close(self):
+    self.sink.close()
+   
+k = K()
+state = StateMachine(k)
 
 source = InputDevice('/dev/input/event5')
 source.grab()
 print(source)
 
-for source_event in source.read_loop():
-  if source_event.type == ecodes.EV_KEY:
-    key_event = categorize(source_event)
-    #print(key_event)
-    #print(key_event.keystate)
-    #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
-    #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
-    #sink.syn()
-    print(state.state_list())
-    if key_event.keystate == events.KeyEvent.key_down:
-      state.keydown(KeyDown(key_event))
-    if key_event.keystate == events.KeyEvent.key_up:
-      state.keyup(KeyUp(key_event))
+try:
+  for source_event in source.read_loop():
+    if source_event.type == ecodes.EV_KEY:
+      key_event = categorize(source_event)
+      #print(key_event)
+      #print(key_event.keystate)
+      #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
+      #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
+      #sink.syn()
+      print(state.state_list())
+      if key_event.keystate == events.KeyEvent.key_down:
+        state.keydown(KeyDown(key_event))
+      if key_event.keystate == events.KeyEvent.key_up:
+        state.keyup(KeyUp(key_event))
+finally:
+  k.close()
