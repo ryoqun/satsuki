@@ -22,9 +22,9 @@ class KeyEvent:
     elif self.event.scancode == ecodes.KEY_RIGHTMETA:
       self.name = "shift"
       self.is_shift = True
-    #elif event == 65314 or event == 65332 or event == 65515:
-    #  self.name = "tenkey"
-    #  self.is_tenkey = True
+    elif self.event.scancode == ecodes.KEY_LEFTMETA:
+      self.name = "tenkey"
+      self.is_tenkey = True
     else:
       self.name = "none"
     #print(self.name)
@@ -92,6 +92,30 @@ class K:
     ecodes.KEY_SLASH: [ecodes.KEY_SLASH, True],
   }
 
+  __tenkey_mode_map = {
+    ecodes.KEY_Q: [ecodes.KEY_1, False],
+    ecodes.KEY_W: [ecodes.KEY_2, False],
+    ecodes.KEY_E: [ecodes.KEY_3, False],
+    ecodes.KEY_R: [ecodes.KEY_4, False],
+    ecodes.KEY_T: [ecodes.KEY_5, False],
+    ecodes.KEY_Y: [ecodes.KEY_6, False],
+    ecodes.KEY_U: [ecodes.KEY_7, False],
+    ecodes.KEY_I: [ecodes.KEY_8, False],
+    ecodes.KEY_O: [ecodes.KEY_9, False],
+    ecodes.KEY_P: [ecodes.KEY_0, False],
+
+    ecodes.KEY_A: [ecodes.KEY_TAB, False],
+    ecodes.KEY_S: [ecodes.KEY_DELETE, False],
+    ecodes.KEY_D: [ecodes.KEY_BACKSPACE, False],
+    ecodes.KEY_F: [ecodes.KEY_ESC, False],
+    #ecodes.KEY_G: unmapped
+    ecodes.KEY_H: [ecodes.KEY_LEFT, False],
+    ecodes.KEY_J: [ecodes.KEY_DOWN, False],
+    ecodes.KEY_K: [ecodes.KEY_UP, False],
+    ecodes.KEY_L: [ecodes.KEY_RIGHT, False],
+    ecodes.KEY_SEMICOLON: [ecodes.KEY_ENTER, False],
+  }
+
   def __init__(self):
     self.sink = UInput()
     self.reset_state()
@@ -100,6 +124,22 @@ class K:
   def emit_with_space_mode(self, event):
     if event.event.scancode in self.__space_mode_map:
       translated_event = self.__space_mode_map[event.event.scancode]
+      if translated_event[1]:
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+        self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+      else:
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 1)
+        self.sink.write(ecodes.EV_KEY, translated_event[0], 0)
+    else:
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+
+  def emit_with_tenkey_mode(self, event):
+    if event.event.scancode in self.__tenkey_mode_map:
+      translated_event = self.__tenkey_mode_map[event.event.scancode]
       if translated_event[1]:
         self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
         self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
@@ -133,10 +173,12 @@ class K:
   def emit(self, event):
     if self.__space_mode and event.event.keystate == events.KeyEvent.key_down:
       self.emit_with_space_mode(event)
-    if self.__control_mode and event.event.keystate == events.KeyEvent.key_down:
+    elif self.__control_mode and event.event.keystate == events.KeyEvent.key_down:
       self.emit_with_control_mode(event)
-    if self.__shift_mode and event.event.keystate == events.KeyEvent.key_down:
+    elif self.__shift_mode and event.event.keystate == events.KeyEvent.key_down:
       self.emit_with_shift_mode(event)
+    elif self.__tenkey_mode and event.event.keystate == events.KeyEvent.key_down:
+      self.emit_with_tenkey_mode(event)
     else:
       self.emit_with_normal_mode(event)
 
