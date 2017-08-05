@@ -10,13 +10,13 @@ class KeyEvent:
     if self.event.scancode == ecodes.KEY_SPACE:
       self.name = "space"
       self.is_space = True
-    #elif self.event == keysyms.slash:
-    #  self.name = "slash"
-    #  self.is_slash = True
-    #elif self.event == keysyms.z:
-    #  self.name = "z"
-    #  self.is_z = True
-    #elif self.event == keysyms.period:
+    elif self.event.scancode == ecodes.KEY_SLASH:
+      self.name = "slash"
+      self.is_slash = True
+    elif self.event.scancode == ecodes.KEY_Z:
+      self.name = "z"
+      self.is_z = True
+    #elif self.event.scancode == keysyms.period:
     #  self.name = "slash"
     #  self.is_period = True
     #elif event == 65315 or event == 65329 or event == 65516:
@@ -95,6 +95,7 @@ class K:
   def __init__(self):
     self.sink = UInput()
     self.reset_state()
+    self.buffered_event = None
 
   def emit_with_space_mode(self, event):
     if event.event.scancode in self.__space_mode_map:
@@ -130,6 +131,30 @@ class K:
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_SPACE, 0)
     self.sink.syn()
 
+  def emit_z(self):
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_Z, 1)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_Z, 0)
+    self.sink.syn()
+
+  def emit_slash(self):
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 1)
+    self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 0)
+    self.sink.syn()
+
+  def emit_as_buffered(self, event):
+    self.buffered_event = event
+
+  def emit_buffered(self, event):
+    print(event)
+    self.emit(event)
+    self.buffered_event = None
+
+  def buffer(self, event):
+    self.emit_as_buffered(event)
+
+  def flush(self):
+    self.emit_buffered(event)
+
   def reset_state(self):
     self.__buffer = None
     self.__space_mode = False
@@ -161,15 +186,15 @@ source = InputDevice('/dev/input/event5')
 source.grab()
 print(source)
 
-for event in source.read_loop():
-  if event.type == ecodes.EV_KEY:
-    key_event = categorize(event)
+for source_event in source.read_loop():
+  if source_event.type == ecodes.EV_KEY:
+    key_event = categorize(source_event)
     #print(key_event)
     #print(key_event.keystate)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
     #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
     #sink.syn()
-    #print(state.state_list())
+    print(state.state_list())
     if key_event.keystate == events.KeyEvent.key_down:
       state.keydown(KeyDown(key_event))
     if key_event.keystate == events.KeyEvent.key_up:
