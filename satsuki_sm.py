@@ -375,12 +375,12 @@ class MainMap_PreSpace(MainMap_Default):
                 fsm.setState(MainMap.PostSpace)
                 fsm.getState().Entry(fsm)
         else:
-            endState = fsm.getState()
+            fsm.getState().Exit(fsm)
             fsm.clearState()
             try:
                 ctxt.emit(event)
             finally:
-                fsm.setState(endState)
+                fsm.popState()
 
 
 class MainMap_Space(MainMap_Default):
@@ -523,8 +523,14 @@ class MainMap_PreZKeyControl(MainMap_Default):
                 fsm.setState(MainMap.NestedZKeyControl)
                 fsm.getState().Entry(fsm)
         else:
-            MainMap_Default.keyup(self, fsm, event)
-        
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.popState()
+
+
 class MainMap_PreSlashControl(MainMap_Default):
 
     def keydown(self, fsm, event):
@@ -571,8 +577,14 @@ class MainMap_PreSlashControl(MainMap_Default):
                 fsm.setState(MainMap.NestedSlashControl)
                 fsm.getState().Entry(fsm)
         else:
-            MainMap_Default.keyup(self, fsm, event)
-        
+            fsm.getState().Exit(fsm)
+            fsm.clearState()
+            try:
+                ctxt.emit(event)
+            finally:
+                fsm.popState()
+
+
 class MainMap_SemiRightMeta(MainMap_Default):
 
     def keydown(self, fsm, event):

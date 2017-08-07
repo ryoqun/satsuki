@@ -248,6 +248,10 @@ PreZKeyControl {
   keyup(event: KeyEvent) [ event.is_space ]
     NestedZKeyControl
     { emit_slash(); }
+
+  keyup(event: KeyEvent)
+    pop
+    { emit(event); }
 }
 
 PreSlashControl {
@@ -270,6 +274,10 @@ PreSlashControl {
   keyup(event: KeyEvent) [ event.is_space ]
     NestedSlashControl
     { emit_slash(); }
+
+  keyup(event: KeyEvent)
+    pop
+    { emit(event); }
 }
 
 SemiRightMeta {
