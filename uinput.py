@@ -35,6 +35,9 @@ class KeyDown(KeyEvent):
 class KeyUp(KeyEvent):
   pass
 
+class KeyHold(KeyEvent):
+  pass
+
 class StateMachine(satsuki_sm.Turnstile_sm):
   def state_list(self):
     return self._state_stack + [self._state]
@@ -171,13 +174,13 @@ class K:
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
   def emit(self, event):
-    if self.__space_mode and event.event.keystate == events.KeyEvent.key_down:
+    if self.__space_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_space_mode(event)
-    elif self.__control_mode and event.event.keystate == events.KeyEvent.key_down:
+    elif self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_control_mode(event)
-    elif self.__shift_mode and event.event.keystate == events.KeyEvent.key_down:
+    elif self.__shift_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_shift_mode(event)
-    elif self.__tenkey_mode and event.event.keystate == events.KeyEvent.key_down:
+    elif self.__tenkey_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_tenkey_mode(event)
     else:
       self.emit_with_normal_mode(event)
@@ -262,5 +265,7 @@ try:
         state.keydown(KeyDown(key_event))
       if key_event.keystate == events.KeyEvent.key_up:
         state.keyup(KeyUp(key_event))
+      if key_event.keystate == events.KeyEvent.key_hold:
+        k.emit(KeyHold(key_event))
 finally:
   k.close()
