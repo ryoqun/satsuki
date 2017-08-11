@@ -379,6 +379,7 @@ class MainMap_PreSpace(MainMap_Default):
             fsm.clearState()
             try:
                 ctxt.emit(event)
+                ctxt.emit_space()
             finally:
                 fsm.popState()
 

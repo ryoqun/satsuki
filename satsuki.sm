@@ -158,7 +158,7 @@ PreSpace {
 
   keyup(event: KeyEvent)
     pop
-    { emit(event); }
+    { emit(event); emit_space(); }
 
   keydown(event: KeyEvent) [ event.is_slash ]
     Space/push(PreSlashControl)
