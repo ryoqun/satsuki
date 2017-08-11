@@ -198,8 +198,16 @@ class K:
     self.sink.syn()
 
   def emit_slash(self):
-    self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 1)
-    self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 0)
+    if self.__space_mode:
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 1)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 2)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 1)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 0)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTSHIFT, 0)
+    else:
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 1)
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_SLASH, 0)
+
     self.sink.syn()
 
   def emit_as_buffered(self, event):
