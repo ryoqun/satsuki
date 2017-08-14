@@ -43,7 +43,6 @@ class StateMachine(satsuki_sm.Turnstile_sm):
     return self._state_stack + [self._state]
 
   def state_exit(self):
-    raise "aaaa"
     self._state_stack[-1].Exit(self)
     return self._state_stack[-1]
 
@@ -124,6 +123,13 @@ class K:
     self.reset_state()
     self.buffered_event = None
 
+  def set_state(self, state):
+    self.__state = state
+
+  def pop_state(self):
+    self.__state.state_exit()
+    self.__state.popState()
+
   def emit_with_space_mode(self, event):
     if event.event.scancode in self.__space_mode_map:
       translated_event = self.__space_mode_map[event.event.scancode]
@@ -159,8 +165,11 @@ class K:
   def emit_with_control_mode(self, event):
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 1)
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 2)
-    self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
-    self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
+    if self.__space_mode:
+      self.emit_with_space_mode(event)
+    else:
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
+      self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 0)
 
   def emit_with_shift_mode(self, event):
@@ -174,10 +183,10 @@ class K:
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
   def emit(self, event):
-    if self.__space_mode and event.event.keystate != events.KeyEvent.key_up:
-      self.emit_with_space_mode(event)
-    elif self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
+    if self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_control_mode(event)
+    elif self.__space_mode and event.event.keystate != events.KeyEvent.key_up:
+      self.emit_with_space_mode(event)
     elif self.__shift_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_shift_mode(event)
     elif self.__tenkey_mode and event.event.keystate != events.KeyEvent.key_up:
@@ -251,6 +260,7 @@ class K:
    
 k = K()
 state = StateMachine(k)
+k.set_state(state)
 
 source = InputDevice('/dev/input/event5')
 source.grab()
