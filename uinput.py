@@ -183,7 +183,13 @@ class K:
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
   def emit(self, event):
-    if self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
+    if event.event.scancode == ecodes.KEY_CAPSLOCK:
+      print("hankaku/zenkaku")
+      self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
+    elif event.event.scancode == ecodes.KEY_LEFTMETA and event.event.keystate == events.KeyEvent.key_hold:
+      print("super hold")
+      #self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
+    elif self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_control_mode(event)
     elif self.__space_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_space_mode(event)
