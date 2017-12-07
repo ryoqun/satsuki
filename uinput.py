@@ -167,6 +167,9 @@ class K:
     self.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTCTRL, 2)
     if self.__space_mode:
       self.emit_with_space_mode(event)
+    elif self.__tenkey_mode:
+      print("control tenkey")
+      self.emit_with_tenkey_mode(event)
     else:
       self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
       self.sink.write(ecodes.EV_KEY, event.event.scancode, 0)
@@ -184,10 +187,9 @@ class K:
 
   def emit(self, event):
     if event.event.scancode == ecodes.KEY_CAPSLOCK:
-      print("hankaku/zenkaku")
       self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
     elif event.event.scancode == ecodes.KEY_LEFTMETA and event.event.keystate == events.KeyEvent.key_hold:
-      print("super hold")
+      pass
       #self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
     elif self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_control_mode(event)
@@ -276,9 +278,25 @@ try:
   for source_event in source.read_loop():
     if source_event.type == ecodes.EV_KEY:
       key_event = categorize(source_event)
-      if key_event.scancode == ecodes.KEY_FN:
-        print("quiting...")
-        break
+      #if key_event.scancode == ecodes.KEY_FN:
+      #  print("quiting...")
+      #  break
+      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_down:
+        print("up...")
+        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 1)
+        k.sink.syn()
+        continue
+      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_hold:
+        print("hold...")
+        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 2)
+        k.sink.syn()
+        continue
+      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_up:
+        print("down...")
+        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 0)
+        k.sink.syn()
+        continue
+      #  break
       print(key_event)
       #print(key_event.keystate)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
