@@ -1,6 +1,7 @@
 from evdev import InputDevice, UInput, categorize, events, ecodes
 import statemap
 import satsuki_sm
+import os
 
 class KeyEvent:
   def __init__(self, event):
@@ -270,7 +271,7 @@ k = K()
 state = StateMachine(k)
 k.set_state(state)
 
-source = InputDevice('/dev/input/event5')
+source = InputDevice('/dev/input/by-id/usb-Apple_Inc._Apple_Internal_Keyboard___Trackpad-event-kbd')
 source.grab()
 print(source)
 
@@ -296,6 +297,9 @@ try:
         k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 0)
         k.sink.syn()
         continue
+      if key_event.scancode == ecodes.KEY_RIGHTSHIFT:
+        print("kill x2x...")
+        os.system("pkill -QUIT x2x")
       #  break
       print(key_event)
       #print(key_event.keystate)
