@@ -297,9 +297,9 @@ try:
         k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 0)
         k.sink.syn()
         continue
-      if key_event.scancode == ecodes.KEY_RIGHTSHIFT:
-        print("kill x2x...")
-        os.system("pkill -QUIT x2x")
+      #if key_event.scancode == ecodes.KEY_RIGHTSHIFT:
+      #  print("kill x2x...")
+      #  os.system("pkill -QUIT x2x")
       #  break
       print(key_event)
       #print(key_event.keystate)
