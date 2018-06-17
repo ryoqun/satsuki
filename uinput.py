@@ -111,7 +111,7 @@ class K:
     ecodes.KEY_S: [ecodes.KEY_DELETE, False],
     ecodes.KEY_D: [ecodes.KEY_BACKSPACE, False],
     ecodes.KEY_F: [ecodes.KEY_ESC, False],
-    #ecodes.KEY_G: unmapped
+    ecodes.KEY_G: [ecodes.KEY_F1, False],
     ecodes.KEY_H: [ecodes.KEY_LEFT, False],
     ecodes.KEY_J: [ecodes.KEY_DOWN, False],
     ecodes.KEY_K: [ecodes.KEY_UP, False],
@@ -169,7 +169,7 @@ class K:
     if self.__space_mode:
       self.emit_with_space_mode(event)
     elif self.__tenkey_mode:
-      print("control tenkey")
+      #print("control tenkey")
       self.emit_with_tenkey_mode(event)
     else:
       self.sink.write(ecodes.EV_KEY, event.event.scancode, 1)
@@ -187,12 +187,12 @@ class K:
     self.sink.write(ecodes.EV_KEY, event.event.scancode, event.event.keystate)
 
   def emit(self, event):
-    if event.event.scancode == ecodes.KEY_CAPSLOCK:
-      self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
-    elif event.event.scancode == ecodes.KEY_LEFTMETA and event.event.keystate == events.KeyEvent.key_hold:
-      pass
-      #self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
-    elif self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
+    #if event.event.scancode == ecodes.KEY_CAPSLOCK:# or event.event.scancode == ecodes.KEY_SYSRQ:
+    #  self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
+    #elif event.event.scancode == ecodes.KEY_LEFTMETA and event.event.keystate == events.KeyEvent.key_hold:
+    #  pass
+    #  #self.sink.write(ecodes.EV_KEY, ecodes.KEY_F1, event.event.keystate)
+    if self.__control_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_control_mode(event)
     elif self.__space_mode and event.event.keystate != events.KeyEvent.key_up:
       self.emit_with_space_mode(event)
@@ -273,7 +273,7 @@ k.set_state(state)
 
 source = InputDevice('/dev/input/by-id/usb-Apple_Inc._Apple_Internal_Keyboard___Trackpad-event-kbd')
 source.grab()
-print(source)
+#print(source)
 
 try:
   for source_event in source.read_loop():
@@ -282,31 +282,31 @@ try:
       #if key_event.scancode == ecodes.KEY_FN:
       #  print("quiting...")
       #  break
-      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_down:
-        print("up...")
-        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 1)
-        k.sink.syn()
-        continue
-      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_hold:
-        print("hold...")
-        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 2)
-        k.sink.syn()
-        continue
-      if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_up:
-        print("down...")
-        k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 0)
-        k.sink.syn()
-        continue
+      #if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_down:
+      #  print("up...")
+      #  k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 1)
+      #  k.sink.syn()
+      #  continue
+      #if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_hold:
+      #  print("hold...")
+      #  k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 2)
+      #  k.sink.syn()
+      #  continue
+      #if key_event.scancode == ecodes.KEY_APOSTROPHE and key_event.keystate == events.KeyEvent.key_up:
+      #  print("down...")
+      #  k.sink.write(ecodes.EV_KEY, ecodes.KEY_LEFTMETA, 0)
+      #  k.sink.syn()
+      #  continue
       #if key_event.scancode == ecodes.KEY_RIGHTSHIFT:
       #  print("kill x2x...")
       #  os.system("pkill -QUIT x2x")
       #  break
-      print(key_event)
+      #print(key_event)
       #print(key_event.keystate)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 1)
       #sink.write(ecodes.EV_KEY, ecodes.KEY_A, 0)
       #sink.syn()
-      print(state.state_list())
+      #print(state.state_list())
       if key_event.keystate == events.KeyEvent.key_down:
         state.keydown(KeyDown(key_event))
       if key_event.keystate == events.KeyEvent.key_up:
